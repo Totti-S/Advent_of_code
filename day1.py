@@ -1,8 +1,5 @@
-import numpy as np
-from time import perf_counter
+
 def main():
-    data = ""
-    s = perf_counter()
     with open("Advent_of_code22/Day1_data.txt", "r") as f:
         data = f.readlines()
     
@@ -16,14 +13,12 @@ def main():
             calorie_counter = 0
         else:
             calorie_counter += int(calories)
-    e = perf_counter()
-    t = (e-s) *1000
-    print(np.max(top_three), f"time: {t}")
-    print(top_three)
-    print(sum(top_three))
 
+    print(max(top_three)) # First solution
+    print(sum(top_three)) # Second solution
+
+# Made a second solution
 def main2():
-    s = perf_counter()
     with open("Advent_of_code22/Day1_data.txt", "r") as f:
         data = f.read()
 
@@ -32,13 +27,10 @@ def main2():
     # Conversion str -> int
     elf_calories = [(map(int, calories)) for calories in elf_calories]
     elf_sums = [sum(elf) for elf in elf_calories]
-    e = perf_counter()
-    t = (e-s) *1000
-
-    sorted_elf_sums = np.sort(elf_sums)
-    print(np.max(elf_sums), f"time: {t}")
-    print(sorted_elf_sums[-3:]) # Instead of first the results are last three
-    print(np.sum(sorted_elf_sums[-3:]))
+    sorted_elf_sums = sorted(elf_sums)
+    
+    print(sorted_elf_sums[-1])
+    print(sum(sorted_elf_sums[-3:]))
 
 
 if __name__ == "__main__":
