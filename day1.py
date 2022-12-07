@@ -1,5 +1,5 @@
 def main():
-    with open("Advent_of_code22/Day1_data.txt", "r") as f:
+    with open("day1_data.txt", "r") as f:
         data = f.readlines()
     
     calorie_counter= 0
@@ -18,7 +18,7 @@ def main():
 
 # Made a second solution
 def main2():
-    with open("Advent_of_code22/Day1_data.txt", "r") as f:
+    with open("day1_data.txt", "r") as f:
         data = f.read()
 
     splitted_data = data.split("\n\n")

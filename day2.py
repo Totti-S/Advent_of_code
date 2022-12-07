@@ -35,7 +35,7 @@ def main():
             elif p2 == "Y": return 6
             else: return 7
     
-    with open("Advent_of_code22/day2_data.txt", "r") as f:
+    with open("day2_data.txt", "r") as f:
         data = f.readlines()
 
     ascii_X = ord('X')

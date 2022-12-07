@@ -1,6 +1,6 @@
 def main():
 
-    with open("Advent_of_code22/day7_data.txt", "r") as f:
+    with open("day7_data.txt", "r") as f:
         data = f.readlines()
     
     class Dir:
