@@ -1,6 +1,6 @@
 def main():
 
-    with open("Advent_of_code22/day3_data.txt", "r") as f:
+    with open("day3_data.txt", "r") as f:
         data = f.readlines()
 
     def type_priority(item):
@@ -36,8 +36,8 @@ def main():
         groups = data[start:start+3]
         #small optimazation: order the groups smallest to largerst
         sorted_groups = sorted(groups, key=len)
-        for item in groups[0]:
-            if item in groups[1] and item in groups[2]:
+        for item in sorted_groups[0]:
+            if item in sorted_groups[1] and item in sorted_groups[2]:
                 batches_sum += type_priority(item)
                 break
     
