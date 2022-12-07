@@ -1,4 +1,3 @@
-
 def main():
     with open("Advent_of_code22/Day1_data.txt", "r") as f:
         data = f.readlines()
