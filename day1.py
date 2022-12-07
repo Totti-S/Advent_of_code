@@ -7,7 +7,7 @@ def main():
     for calories in data:
         if calories == "\n":
             if any([calorie_counter > elf for elf in top_three]):
-                top_three.remove(np.min(top_three))
+                top_three.remove(min(top_three))
                 top_three.append(calorie_counter)
             calorie_counter = 0
         else:

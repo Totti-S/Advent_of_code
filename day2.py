@@ -60,9 +60,8 @@ def main():
         choice_score = rps2(player1_input,player2_input, second_part_outcomes)
         ultra_top_secret_score2 += (ord(player2_input)-ascii_X) * 3 + choice_score
 
-    print(player2_score_counter, f"time: {t:.2f} ms")
-    print(ultra_top_secret_score, f"time: {t:.2f} ms")
-
+    print(player2_score_counter)
+    print(ultra_top_secret_score)
     
     
 if __name__ == "__main__":
