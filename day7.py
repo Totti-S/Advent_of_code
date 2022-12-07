@@ -91,12 +91,5 @@ def main():
     smallest_dir = find_smallest_enough(max_disk_space, master_dir, unused_disk_space, required_space)
     print(smallest_dir)
 
-    
-
-
-
-
-
 if __name__ == "__main__":
     main()
-
