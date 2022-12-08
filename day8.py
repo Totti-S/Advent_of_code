@@ -1,6 +1,6 @@
+from time import perf_counter
 def main():
-
-    with open("day8_data.txt", "r") as f:
+    with open("od1i.txt/bigboy.txt", "r") as f:
         data = f.readlines()
 
     c_size = len(data)
@@ -63,7 +63,7 @@ def main():
     scenic_score = 0
     for row in range(c_size):
         for column in range(r_size):
-            # Labeling idea from Eetu Knutas turned into better generalized function
+            # Labeling idea from Eetu Knutars turned into better generalized function
             dist1 = tree_distance_counter(row, column, "N") # North
             dist2 = tree_distance_counter(row, column, "E") # East
             dist3 = tree_distance_counter(row, column, "S") # South
@@ -75,4 +75,7 @@ def main():
     print(scenic_score)
 
 if __name__ == "__main__":
+    s = perf_counter()
     main()
+    e = perf_counter()
+    print(f'Time {e-s:.2f} (s)')
