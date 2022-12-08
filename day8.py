@@ -51,7 +51,7 @@ def main():
     print(len(unique_trees))
     print(len(seen_trees))
 
-    def tree_distance_counter(data, marker_tree, check_range, ref_idx, row=True):
+    def tree_distance_counter(marker_tree, check_range, ref_idx, row=True):
         distance = 0
         for x in check_range:
             distance += 1
@@ -71,10 +71,10 @@ def main():
             range4 = range(row+1,c_size)
 
             # Labeling idea from Eetu Knutas
-            dist1 = tree_distance_counter(data, marker_tree, range1, row, True) # West
-            dist2 = tree_distance_counter(data, marker_tree, range2, row, True) # East
-            dist3 = tree_distance_counter(data, marker_tree, range3, column, False) # North
-            dist4 = tree_distance_counter(data, marker_tree, range4, column, False) # South
+            dist1 = tree_distance_counter(marker_tree, range1, row, True) # West
+            dist2 = tree_distance_counter(marker_tree, range2, row, True) # East
+            dist3 = tree_distance_counter(marker_tree, range3, column, False) # North
+            dist4 = tree_distance_counter(marker_tree, range4, column, False) # South
 
             tree_score = dist1*dist2*dist3*dist4
             scenic_score = tree_score if tree_score > scenic_score else scenic_score
