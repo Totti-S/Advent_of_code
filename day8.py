@@ -23,7 +23,6 @@ def main():
     # Go through all the data rows
     for i,row in enumerate(data):
         row = row.strip()
-
         find_trees(row, i, False, False)
         find_trees(row, i, False, True)
 
@@ -32,7 +31,6 @@ def main():
         column = ""
         for i in range(c_size):
             column += data[i][j]
-        
         find_trees(column,j, True, False)
         find_trees(column,j, True, True)
 
