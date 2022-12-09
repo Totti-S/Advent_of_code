@@ -61,10 +61,5 @@ def main():
             tail_positions.add(tuple(rope[-1]))
     print(len(tail_positions))
 
-
-
-
-
-
 if __name__ == "__main__":
     main()
