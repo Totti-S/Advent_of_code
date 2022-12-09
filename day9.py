@@ -51,16 +51,12 @@ def main():
                     prev_knot = rope[i-1]
                     row_diff = prev_knot[0] - knot[0]
                     col_diff = prev_knot[1] - knot[1]
-                    if not row_diff:
-                        if abs(col_diff) == 2:
-                            knot[1] += 1 if col_diff > 0 else -1
-                    elif not col_diff:
-                        if abs(row_diff) == 2:
-                            knot[0] += 1 if row_diff > 0 else -1
-                    else:
-                        if abs(row_diff) == 2 or abs(col_diff) == 2:
-                            knot[0] += 1 if row_diff > 0 else -1
-                            knot[1] += 1 if col_diff > 0 else -1
+                    if abs(row_diff) == 2:
+                        knot[0] += 1 if row_diff > 0 else -1
+                        knot[1] += 1 if col_diff > 0 else -1 if col_diff else 0
+                    elif abs(col_diff) == 2:
+                        knot[0] += 1 if row_diff > 0 else -1 if row_diff else 0
+                        knot[1] += 1 if col_diff > 0 else -1
 
             tail_positions.add(tuple(rope[-1]))
     print(len(tail_positions))
