@@ -43,25 +43,24 @@ def main():
         direction, distance = commands[0], int(commands[1])
         
         for _ in range(distance):
-            inc = 1 if direction in ["R", "U"] else -1
-            idx = 0 if direction in ["U", "D"] else 1
             for i,knot in enumerate(rope):
                 if i == 0:  # Head moves
-                    knot[idx] += inc
+                    idx = 0 if direction in ["U", "D"] else 1
+                    knot[idx] += 1 if direction in ["R", "U"] else -1
                 else:
                     prev_knot = rope[i-1]
-                    calc1 = prev_knot[0] - knot[0]
-                    calc2 = prev_knot[1] - knot[1]
-                    if not calc1:
-                        if abs(calc2) == 2:
-                            knot[1] += 1 if calc2 > 0 else -1
-                    elif not calc2:
-                        if abs(calc1) == 2:
-                            knot[0] += 1 if calc1 > 0 else -1
+                    row_diff = prev_knot[0] - knot[0]
+                    col_diff = prev_knot[1] - knot[1]
+                    if not row_diff:
+                        if abs(col_diff) == 2:
+                            knot[1] += 1 if col_diff > 0 else -1
+                    elif not col_diff:
+                        if abs(row_diff) == 2:
+                            knot[0] += 1 if row_diff > 0 else -1
                     else:
-                        if abs(calc1) == 2 or abs(calc2) == 2:
-                            knot[0] += 1 if calc1 > 0 else -1
-                            knot[1] += 1 if calc2 > 0 else -1
+                        if abs(row_diff) == 2 or abs(col_diff) == 2:
+                            knot[0] += 1 if row_diff > 0 else -1
+                            knot[1] += 1 if col_diff > 0 else -1
 
             tail_positions.add(tuple(rope[-1]))
     print(len(tail_positions))
