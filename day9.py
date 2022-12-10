@@ -12,20 +12,16 @@ def main():
         direction, distance = commands[0], int(commands[1])
         for _ in range(distance):
             inc = 1 if direction in ["R", "U"] else -1
-            if direction in ["R" ,"L"]:
-                head[1] += inc
-                if head[0] == tail[0] and abs(head[1] - tail[1]) == 2:
-                    tail[1] += inc
-                elif head[1] != tail[1] and abs(head[1] - tail[1]) == 2:
-                    pos = head[1]-1 if direction == "R" else head[1]+1
-                    tail = [head[0],pos]
-            else:
-                head[0] += inc
-                if tail[1] == head[1] and abs(head[0] - tail[0]) == 2:
-                    tail[0] += inc
-                elif head[0] != tail[0] and abs(head[0] - tail[0]) == 2:
-                    pos = head[0]-1 if direction == "U" else head[0]+1
-                    tail = [pos,head[1]]
+            idx = direction in ["R", "L"]
+            idx2 = not idx
+
+            head[idx] += inc
+            if abs(head[idx] - tail[idx]) == 2:
+                if head[idx2] == tail[idx2]:
+                    tail[idx] += inc
+                elif head[idx] != tail[idx]:
+                    pos = head[idx] + inc*(-1)
+                    tail = [head[0],pos] if idx else [pos, head[1]]
 
             tails_positions.add(tuple(tail))
         
