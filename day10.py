@@ -5,7 +5,6 @@ def main():
     x_values = [1]
     for line in data: 
         command = line.split()
-        
         x_values.append(x_values[-1])
         if len(command) > 1:
             x_values.append(x_values[-1] + int(command[1]))
