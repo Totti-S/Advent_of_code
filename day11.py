@@ -7,7 +7,6 @@ def main():
     with open("day11_data.txt", "r") as f:
         data = f.read()
 
-
     class Item():
         #   13  17  19  23
         dividers = [2,3,5,7,11,13, 17, 19, 23]
@@ -20,11 +19,8 @@ def main():
             self.items = items
 
             if operation_num == "old":
+                self.operation = "**"
                 self.operation_num = 2
-                if operation == "+":
-                    self.operation = "*"
-                else:
-                    self.operation = "**"
             else:
                 self.operation = operation
                 self.operation_num = int(operation_num)
@@ -61,11 +57,10 @@ def main():
         for i, ape in enumerate(info):
             ape_info = ape.strip()
             if i == 1:
-                items = ape_info.split(":")[1]
-                items = items.split(",")
-                items = [Item(int(i)) for i in items]
+                tmp = ape_info.split(":")[1].split(",")
+                items = [Item(int(i)) for i in tmp]
                 init_info.append(items)
-            elif i != 0:
+            elif i > 1:
                 list_things = ape_info.split(" ")
                 if i == 2:
                     init_info.append(list_things[-2])
