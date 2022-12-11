@@ -1,0 +1,88 @@
+from collections import deque
+from math import floor
+from time import perf_counter
+from numpy import square
+
+def main():
+    with open("day11_data.txt", "r") as f:
+        data = f.read()
+
+
+    class Item():
+        #   13  17  19  23
+        dividers = [2,3,5,7,11,13, 17, 19, 23]
+        def __init__(self, number):
+            self.reminders = [number%num for num in Item.dividers]
+
+    monkeys = []
+    class Monkey():
+        def __init__(self,items, operation, operation_num, div_test, true_idx, false_idx):
+            self.items = items
+
+            if operation_num == "old":
+                self.operation_num = 2
+                if operation == "+":
+                    self.operation = "*"
+                else:
+                    self.operation = "**"
+            else:
+                self.operation = operation
+                self.operation_num = int(operation_num)
+            
+            self.div_test = int(div_test)
+            self.if_true = int(true_idx)
+            self.if_false = int(false_idx)
+            self.looked_items = 0
+
+        def do(self):
+            if self.items:
+                for item in self.items:
+                    if self.operation == "+":
+                        item.reminders = [(num + self.operation_num) % divider for num,divider in zip(item.reminders, Item.dividers)]
+                    elif self.operation == "*":
+                        item.reminders = [(num * self.operation_num) % divider for num,divider in zip(item.reminders, Item.dividers)]
+                    else:
+                        item.reminders = [(num * num) % divider for num,divider in zip(item.reminders, Item.dividers)]
+                    
+                    #new = floor(new / 3) 
+                    rem_idx = Item.dividers.index(self.div_test)
+                    idx = self.if_false if item.reminders[rem_idx] % self.div_test else self.if_true
+                    monkeys[idx].items.append(item)
+
+                self.looked_items += len(self.items)
+                self.items = []
+
+
+    monkeys_data = data.split("\n\n")
+    
+    for monkey in monkeys_data:
+        info = monkey.split("\n")
+        init_info = []
+        for i, ape in enumerate(info):
+            ape_info = ape.strip()
+            if i == 1:
+                items = ape_info.split(":")[1]
+                items = items.split(",")
+                items = [Item(int(i)) for i in items]
+                init_info.append(items)
+            elif i != 0:
+                list_things = ape_info.split(" ")
+                if i == 2:
+                    init_info.append(list_things[-2])
+                init_info.append(list_things[-1])
+
+        new_monkey = Monkey(*init_info)
+        monkeys.append(new_monkey)
+
+    num_rounds = 10_000
+    for r in range(0,num_rounds):
+        for monkey in monkeys:
+            monkey.do()
+
+    inspected_item_counts = sorted([monkey.looked_items for monkey in monkeys])
+    
+    print(inspected_item_counts[-1]* inspected_item_counts[-2])
+
+
+if __name__ == "__main__":
+    main()
