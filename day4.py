@@ -4,7 +4,7 @@ def main():
         tmp = tasks.split('-')
         return list((map(int, tmp)))
 
-    with open("day4_data.txt", "r") as f:
+    with open("data/day4_data.txt", "r") as f:
         data = f.readlines()
     
     fully_contained = 0

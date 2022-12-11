@@ -4,7 +4,7 @@ from time import perf_counter
 from numpy import square
 
 def main():
-    with open("day11_data.txt", "r") as f:
+    with open("data/day11_data.txt", "r") as f:
         data = f.read()
 
     class Item():

@@ -1,6 +1,6 @@
 import numpy as np
 def main():
-    with open("day6_data.txt", "r") as f:
+    with open("data/day6_data.txt", "r") as f:
         data = f.read()
 
     marker = -1

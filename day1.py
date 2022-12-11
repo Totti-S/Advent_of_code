@@ -1,5 +1,5 @@
 def main():
-    with open("day1_data.txt", "r") as f:
+    with open("data/day1_data.txt", "r") as f:
         data = f.readlines()
     
     calorie_counter= 0

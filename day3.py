@@ -1,6 +1,6 @@
 def main():
 
-    with open("day3_data.txt", "r") as f:
+    with open("data/day3_data.txt", "r") as f:
         data = f.readlines()
 
     def type_priority(item):
