@@ -9,11 +9,10 @@ def main():
 
     class Item():
         #   13  17  19  23
-        dividers = [2,3,5,7,11,13, 17, 19, 23]
+        dividers = [2,3,5,7,11,13,17,19,23]
         def __init__(self, number):
             self.reminders = [number%num for num in Item.dividers]
 
-    monkeys = []
     class Monkey():
         def __init__(self,items, operation, operation_num, div_test, true_idx, false_idx):
             self.items = items
@@ -50,24 +49,24 @@ def main():
 
 
     monkeys_data = data.split("\n\n")
+    monkeys = []
     
-    for monkey in monkeys_data:
-        info = monkey.split("\n")
+    for monkey_data in monkeys_data:
+        info = monkey_data.split("\n")
         init_info = []
-        for i, ape in enumerate(info):
-            ape_info = ape.strip()
+        for i, tmp_info in enumerate(info):
+            info_field = tmp_info.strip()
             if i == 1:
-                tmp = ape_info.split(":")[1].split(",")
+                tmp = info_field.split(":")[1].split(",")
                 items = [Item(int(i)) for i in tmp]
                 init_info.append(items)
             elif i > 1:
-                list_things = ape_info.split(" ")
+                list_things = info_field.split(" ")
                 if i == 2:
                     init_info.append(list_things[-2])
                 init_info.append(list_things[-1])
 
-        new_monkey = Monkey(*init_info)
-        monkeys.append(new_monkey)
+        monkeys.append(Monkey(*init_info))
 
     num_rounds = 10_000
     for r in range(0,num_rounds):
