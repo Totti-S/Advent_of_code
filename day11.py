@@ -12,6 +12,12 @@ def main():
         dividers = [2,3,5,7,11,13,17,19,23]
         def __init__(self, number):
             self.reminders = [number%num for num in Item.dividers]
+        def plus(self, number):
+            self.reminders = [(num + number) % divider for num,divider in zip(self.reminders, Item.dividers)]
+        def times(self, number):
+            self.reminders = [(num * number) % divider for num,divider in zip(self.reminders, Item.dividers)]
+        def times_itself(self):
+            self.reminders = [(num * num) % divider for num,divider in zip(self.reminders, Item.dividers)]
 
     class Monkey():
         def __init__(self,items, operation, operation_num, div_test, true_idx, false_idx):
@@ -33,13 +39,11 @@ def main():
             if self.items:
                 for item in self.items:
                     if self.operation == "+":
-                        item.reminders = [(num + self.operation_num) % divider for num,divider in zip(item.reminders, Item.dividers)]
+                        item.plus(self.operation_num)
                     elif self.operation == "*":
-                        item.reminders = [(num * self.operation_num) % divider for num,divider in zip(item.reminders, Item.dividers)]
+                        item.times(self.operation_num)
                     else:
-                        item.reminders = [(num * num) % divider for num,divider in zip(item.reminders, Item.dividers)]
-                    
-                    #new = floor(new / 3) 
+                        item.times_itself()
                     rem_idx = Item.dividers.index(self.div_test)
                     idx = self.if_false if item.reminders[rem_idx] % self.div_test else self.if_true
                     monkeys[idx].items.append(item)
@@ -76,7 +80,6 @@ def main():
     inspected_item_counts = sorted([monkey.looked_items for monkey in monkeys])
     
     print(inspected_item_counts[-1]* inspected_item_counts[-2])
-
 
 if __name__ == "__main__":
     main()
