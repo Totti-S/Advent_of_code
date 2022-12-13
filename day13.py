@@ -5,28 +5,7 @@ def main():
         data = f.read()
 
     def iterate_over(left,right):
-        if type(left) == type(right):
-            if type(left) is int:
-                if left < right:
-                    return True
-                elif left > right:
-                    return False
-                else:
-                    return None
-            else:
-                for sub_left, sub_right in zip(left, right):
-                    ans = iterate_over(sub_left,sub_right)
-                    if ans is not None:
-                        return ans
-                else:
-                    if len(left) < len(right):
-                        return True
-                    elif len(left) > len(right):
-                        return False
-                    else: return None
-        else:
-            left = [left] if type(left) is not list else left 
-            right = [right] if type(right) is not list else right
+        def sub_iterate(left,right):
             for sub_left, sub_right in zip(left, right):
                 ans = iterate_over(sub_left,sub_right)
                 if ans is not None:
@@ -37,6 +16,21 @@ def main():
                 elif len(left) > len(right):
                     return False
                 else: return None
+
+        if type(left) == type(right):
+            if type(left) is int:
+                if left < right:
+                    return True
+                elif left > right:
+                    return False
+                else:
+                    return None
+            else:
+                return sub_iterate(left,right)
+        else:
+            left = [left] if type(left) is not list else left 
+            right = [right] if type(right) is not list else right
+            return sub_iterate(left,right)
 
 
     packet_pairs = data.split("\n\n")
