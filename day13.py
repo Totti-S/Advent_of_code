@@ -1,5 +1,3 @@
-from operator import itemgetter
-import numpy as np
 def main():
     with open("data/day13_data.txt", "r") as f:
         data = f.read()
