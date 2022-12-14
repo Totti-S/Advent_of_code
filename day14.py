@@ -38,8 +38,7 @@ def main():
     grid = np.vstack((grid, np.zeros(col_len)))
     grid = np.vstack((grid, np.ones(col_len)))
     
-    source_col = 500
-    col = source_col - start_col
+    col = 500 - start_col
     row = 0
     row_size, col_size = np.shape(grid)
     row_size -= 1
@@ -63,15 +62,12 @@ def main():
 
         if not grid[row+1, col]:
             row += 1
-            continue
         elif not grid[row+1, col-1]:
             row += 1
             col -= 1
-            continue
         elif not grid[row+1, col+1]:
             row += 1 
             col += 1
-            continue
         else:
             grid[row, col] = 1
             sand_units += 1
