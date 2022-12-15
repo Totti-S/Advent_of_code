@@ -1,6 +1,3 @@
-
-from time import perf_counter
-import numpy as np
 def main():
     with open("data/day15_data.txt", "r") as f:
         data = f.readlines()
@@ -57,7 +54,6 @@ def main():
     
     gold = -1
     upper_bound = 2*line_of_intress
-    s = perf_counter()
     for j in range(0,upper_bound+1):
         
         i = 0
@@ -74,10 +70,6 @@ def main():
             if gold != -1:
                 break
             i += 1
-        if j % 100_000 == 0:
-            e = perf_counter()
-            print(f'line {j}: {e-s:.2f} s')
-            s = perf_counter()
         if gold != -1:
             break
 
