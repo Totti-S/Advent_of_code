@@ -3,7 +3,6 @@ def main():
         data = f.readlines()
 
     sensors = []
-    beacons = []
     for line in data:
         line = line.split(" ")
         x_s = int(line[2].lstrip("x=").rstrip(","))
