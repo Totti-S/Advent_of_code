@@ -12,17 +12,13 @@ def main():
         x_b = int(line[-2].lstrip("x=").rstrip(","))
         y_b = int(line[-1].lstrip("y="))
 
-        sensors.append((x_s,y_s))
-        beacons.append((x_b,y_b))
-
+        sensors.append((x_s,y_s,x_b, y_b))  # credit for combining to one list:
+                                            # https://github.com/blin00 solution day15
     silver = -1
 
     line_of_intress = 2_000_000
     not_available_line_points = set()
-    for sensor, beacon in zip(sensors, beacons):
-        s_x, s_y = sensor
-        b_x, b_y = beacon
-
+    for s_x, s_y, b_x, b_y in sensors:
         dist_to_line = abs(s_y - line_of_intress)
         dist_to_beacon = abs(s_y - b_y) + abs(s_x - b_x)
 
@@ -30,26 +26,19 @@ def main():
             leftover_dist = dist_to_beacon - dist_to_line
             not_available_line_points.update([x for x in range(s_x-leftover_dist, s_x+leftover_dist+1)])
 
-    # Remove Sensors and Beacons from data
-    for beacon in beacons:
-        x,y = beacon
-        if y == line_of_intress and x in not_available_line_points:
-            not_available_line_points.remove(x)
-
-    for sensor in sensors:
-        x,y = sensor
-        if y == line_of_intress and x in not_available_line_points:
-            not_available_line_points.remove(x)
+        # Remove Sensors and Beacons from data
+        if s_y == line_of_intress and s_x in not_available_line_points:
+            not_available_line_points.remove(s_x)
+        if b_y == line_of_intress and s_y in not_available_line_points:
+            not_available_line_points.remove(b_x)
 
     silver = len(not_available_line_points)
 
     ############# Part 2
 
-    # Small optimization: only once calculate sensor-beacon distances
+    # Only once calculate sensor-beacon distances
     distances_to_beacon = []
-    for sensor, beacon in zip(sensors, beacons):
-        s_x, s_y = sensor
-        b_x, b_y = beacon
+    for s_x, s_y, b_x, b_y in sensors:
         distances_to_beacon.append(abs(s_y - b_y) + abs(s_x - b_x))
 
     gold = -1
@@ -62,7 +51,7 @@ def main():
         i = 0
         while i <= upper_bound:
             for sensor, distance in zip(sensors, distances_to_beacon):
-                s_x, s_y = sensor
+                s_x, s_y, _, _ = sensor
                 dist_to_point = abs(s_y - j) + abs(s_x - i)
                 if dist_to_point <= distance:
                     i += distance - dist_to_point   # <- This is important for performance:
