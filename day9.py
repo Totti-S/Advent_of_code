@@ -24,7 +24,7 @@ def main():
                     tail = [head[0],pos] if idx else [pos, head[1]]
 
             tails_positions.add(tuple(tail))
-        
+
     print(len(tails_positions))
 
     # OH SHIT, part 2 just hit
@@ -37,7 +37,7 @@ def main():
     for line in data:
         commands = line.split(" ")
         direction, distance = commands[0], int(commands[1])
-        
+
         for _ in range(distance):
             for i,knot in enumerate(rope):
                 if i == 0:  # Head moves

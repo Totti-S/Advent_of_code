@@ -11,7 +11,7 @@ def main():
                 break
         else:
             marker = idx+4
-        
+
         if marker != -1:
             break
 
@@ -26,7 +26,7 @@ def main():
                 break
         else:
             marker = idx+14
-        
+
         if marker != -1:
             break
 

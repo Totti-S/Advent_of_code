@@ -35,7 +35,7 @@ def main():
 
     monkeys_data = data.split("\n\n")
     monkeys = []
-    
+
     for monkey_data in monkeys_data:
         info = monkey_data.split("\n")
         init_info = []
@@ -61,7 +61,7 @@ def main():
             monkey.do()
 
     inspected_item_counts = sorted([monkey.looked_items for monkey in monkeys])
-    
+
     print(inspected_item_counts[-1]* inspected_item_counts[-2])
 
 if __name__ == "__main__":

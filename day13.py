@@ -11,7 +11,7 @@ def main():
             else:
                 if len(left) == len(right):
                     return None
-                else: 
+                else:
                     return len(left) < len(right)
 
         if type(left) is type(right) is int:
@@ -20,7 +20,7 @@ def main():
             else:
                 return left < right
         else:
-            left = [left] if type(left) is not list else left 
+            left = [left] if type(left) is not list else left
             right = [right] if type(right) is not list else right
             return sub_iterate(left,right)
 
@@ -30,8 +30,8 @@ def main():
     for i,pair in enumerate(pairs_of_packets, 1):
         ans = iterate_over(*pair)
         if ans is None and len(pair[0]) < len(pair[1]) or ans:
-            correct.append(i) 
-            
+            correct.append(i)
+
     print(f"Silver : {sum(correct)}")
 
     all_packets = []
@@ -39,8 +39,8 @@ def main():
         all_packets.extend(packet_pair)
     all_packets.append([[2]])   # Add dividers
     all_packets.append([[6]])
-    
-    # This function deconstructs the list of lists of list..... to only for 
+
+    # This function deconstructs the list of lists of list..... to only for
     # a list that contains all the individual values of within the lists
     def flatten_list(elem):
         new_list = []
@@ -53,7 +53,7 @@ def main():
             else:
                 new_list.append(i)
         if not len(elem):   # Replace empty with -1 -> gets priority in sorting
-            new_list.append(-1) 
+            new_list.append(-1)
         return new_list
 
     flat_all_packets = [flatten_list(packet) for packet in all_packets]

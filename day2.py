@@ -13,10 +13,10 @@ def main():
             if p2 == "X": return 1
             elif p2 == "Y": return -1
             else: return 0
-    
+
     # Made a second solution
     def rps2(p1, p2, outcomes=[[0, 1, -1], [-1, 0, 1], [1, -1, 0]]):
-        # We use the ascii to determine the correct result from decision matrix 
+        # We use the ascii to determine the correct result from decision matrix
         # (A = 65) and (X = 88)
         return outcomes[ord(p1) - 65][ord(p2) - 88]
 
@@ -34,7 +34,7 @@ def main():
             if p2 == "X": return 2
             elif p2 == "Y": return 6
             else: return 7
-    
+
     with open("data/day2_data.txt", "r") as f:
         data = f.readlines()
 
@@ -62,7 +62,7 @@ def main():
 
     print(player2_score_counter)
     print(ultra_top_secret_score)
-    
-    
+
+
 if __name__ == "__main__":
     main()

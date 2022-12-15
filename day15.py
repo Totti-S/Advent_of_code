@@ -17,8 +17,8 @@ def main():
 
     silver = -1
 
-    line_of_intress = 2_000_000                                         
-    not_available_line_points = set()                                   
+    line_of_intress = 2_000_000
+    not_available_line_points = set()
     for sensor, beacon in zip(sensors, beacons):
         s_x, s_y = sensor
         b_x, b_y = beacon
@@ -29,7 +29,7 @@ def main():
         if dist_to_line < dist_to_beacon:
             leftover_dist = dist_to_beacon - dist_to_line
             not_available_line_points.update([x for x in range(s_x-leftover_dist, s_x+leftover_dist+1)])
-    
+
     # Remove Sensors and Beacons from data
     for beacon in beacons:
         x,y = beacon
@@ -40,12 +40,12 @@ def main():
         x,y = sensor
         if y == line_of_intress and x in not_available_line_points:
             not_available_line_points.remove(x)
-            
+
     silver = len(not_available_line_points)
 
     ############# Part 2
 
-    # Small optimization: only once calculate sensor-beacon distances 
+    # Small optimization: only once calculate sensor-beacon distances
     distances_to_beacon = []
     for sensor, beacon in zip(sensors, beacons):
         s_x, s_y = sensor
@@ -73,12 +73,12 @@ def main():
             if gold != -1:
                 break
             i += 1
-        
+
         if gold != -1:
             break
 
     print(f'Silver: {silver}')
     print(f'Gold: {gold}')
-     
+
 if __name__ == "__main__":
     main()

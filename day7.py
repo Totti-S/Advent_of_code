@@ -2,7 +2,7 @@ def main():
 
     with open("data/day7_data.txt", "r") as f:
         data = f.readlines()
-    
+
     class Dir:
         def __init__(self, name, dir):
             self.name = name
@@ -41,7 +41,7 @@ def main():
                     current_dir.files.append(new_file)
                     for dir in current_path:
                         dir.size += f_size
-                    continue 
+                    continue
         else:
             if line_info[1] == "ls":
                 continue
@@ -78,7 +78,7 @@ def main():
 
     def find_smallest_enough(min_size, dir, unused, needed):
         dir_size_candidates_to_delete = [dir.size for dir in dir.sub_dirs if unused + dir.size >= needed]
-        if not dir_size_candidates_to_delete: 
+        if not dir_size_candidates_to_delete:
             return min_size
         smallest = min(dir_size_candidates_to_delete)
         if smallest < min_size:

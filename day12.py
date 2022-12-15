@@ -2,7 +2,7 @@ import numpy as np
 def main():
     with open("data/day12_data.txt", "r") as f:
         data = f.readlines()
-    
+
     # Let's make numpy matrix from the string data
     data = np.array([list(line.strip()) for line in data])
 
@@ -32,7 +32,7 @@ def main():
                 return g_scores[current]
             elif part == 2 and matrix[current][0] == e:
                 return g_scores[current]
-            
+
             open_set.remove(current)
             neighbors = []
             if current[1] != col_size -1:
@@ -50,12 +50,12 @@ def main():
                     tentative_g_score += 1 if ord(matrix[neighbor][0]) - ord(matrix[current][0]) <= 1 else np.inf
                 else:
                     tentative_g_score += 1 if ord(matrix[current][0]) - ord(matrix[neighbor][0]) <= 1 else np.inf
-                
+
                 if tentative_g_score < g_scores[neighbor]:
                     g_scores[neighbor] = tentative_g_score
                     if neighbor not in open_set:
                         open_set.append(neighbor)
-        
+
         print("FAILED!")
         return
 

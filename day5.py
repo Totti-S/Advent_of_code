@@ -8,7 +8,7 @@ def main():
     data = data.split("\n\n")
     creates = data[0].split('\n')
     moving_orders = data[1].split('\n')
-    
+
     # We assume that we dont actually know how large the rows are
     # We do know that the number is centered with creates
     indicies = [i for i,char in enumerate(creates[-1]) if char != " "]
@@ -20,10 +20,10 @@ def main():
             box = row[inner_idx]
             if box != " ":
                 crates_dict[idx].append(box)
-    
+
     nd_crate_dict = deepcopy(crates_dict)
 
-    # First solution 
+    # First solution
     for order in moving_orders:
         order = order.split()
         boxes_to_move = int(order[1])
@@ -32,11 +32,11 @@ def main():
         for _ in range(boxes_to_move):
             box = crates_dict[from_column].pop()
             crates_dict[to_column].append(box)
-    
+
     letters = ""
     for column in crates_dict.values():
         letters += column[-1]
-    
+
     print(letters, '\n')
 
     # Second solution
@@ -49,11 +49,11 @@ def main():
         removed_creates = [nd_crate_dict[from_column].pop() for _ in range(boxes_to_move)]
         for box in reversed(removed_creates):
             nd_crate_dict[to_column].append(box)
-    
+
     letters = ""
     for column in nd_crate_dict.values():
         letters += column[-1]
-    
+
     print(letters)
 
 

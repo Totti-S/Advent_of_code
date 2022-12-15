@@ -9,11 +9,11 @@ def main():
         value += 1 - ascii_a if item.islower() else 27 - ascii_A
         return value
 
-    # First part 
+    # First part
     total_sum = 0
     for sack in data:
         sack = sack.strip()
-        
+
         cutoff = int(len(sack)/2)
         st_comp = sack[0:cutoff]
         nd_comp = sack[cutoff:]
@@ -40,9 +40,9 @@ def main():
             if item in sorted_groups[1] and item in sorted_groups[2]:
                 batches_sum += type_priority(item)
                 break
-    
+
     print(batches_sum)
 
-    
+
 if __name__ == "__main__":
     main()

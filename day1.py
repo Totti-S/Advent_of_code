@@ -1,7 +1,7 @@
 def main():
     with open("data/day1_data.txt", "r") as f:
         data = f.readlines()
-    
+
     calorie_counter= 0
     top_three = [-1,-1,-1]
     for calories in data:
@@ -27,7 +27,7 @@ def main2():
     elf_calories = [(map(int, calories)) for calories in elf_calories]
     elf_sums = [sum(elf) for elf in elf_calories]
     sorted_elf_sums = sorted(elf_sums)
-    
+
     print(sorted_elf_sums[-1])
     print(sum(sorted_elf_sums[-3:]))
 
