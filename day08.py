@@ -43,13 +43,13 @@ def main():
         # max_height_idxs = [i for i, j in enumerate(line) if j == max_height]
         # earliest_max = max_height_idxs[0]
         # latest_max = max_height_idxs[-1]
-        
+
         # largest_tree = -1
         # for i,tree in enumerate(line[:earliest_max+1]):
         #     if largest_tree < tree:
         #         seen_trees.add((idx,i) if vertical else (i,idx))
         #         largest_tree = tree
-    
+
         # largest_tree = -1
         # for i,tree in enumerate(list(reversed(line[latest_max:]))):
         #     if largest_tree < tree:
@@ -87,7 +87,7 @@ def main():
         # find_trees(column,j, True, False)
         # find_trees(column,j, True, True)
 
-    # Remove repeated 
+    # Remove repeated
     #unique_trees = list(set(seen_trees))
     #print(len(unique_trees))
     print(len(seen_trees) +4)
@@ -100,16 +100,16 @@ def main():
         vertical = direction in ['N', 'S']
         fixed_idx = column if vertical else row
         marker_tree = int(data[row][column])
-        
+
         s = (row if vertical else column) + (-1 if backwards else 1)
         e = -1 if backwards else c_size if vertical else r_size
         inc = -1 if backwards else 1
-        
+
         distance = 0
         for x in range(s,e,inc):
             distance += 1
             target_tree = data[x][fixed_idx] if vertical else data[fixed_idx][x]
-            if int(target_tree) >= marker_tree: 
+            if int(target_tree) >= marker_tree:
                 break
         return distance
 
@@ -125,7 +125,7 @@ def main():
 
             tree_score = dist1*dist2*dist3*dist4
             scenic_score = tree_score if tree_score > scenic_score else scenic_score
-    
+
     print(scenic_score)
 
 if __name__ == "__main__":
