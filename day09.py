@@ -1,5 +1,5 @@
 def main():
-    with open("data/day9_data.txt", "r") as f:
+    with open("data/day09_data.txt", "r") as f:
         data = f.readlines()
 
     head = [0,0]

@@ -1,11 +1,11 @@
 def main():
+    with open("data/day04_data.txt", "r") as f:
+        data = f.readlines()
 
     def split_tasks(tasks):
         tmp = tasks.split('-')
         return list((map(int, tmp)))
 
-    with open("data/day4_data.txt", "r") as f:
-        data = f.readlines()
 
     fully_contained = 0
     overlap_sum = 0

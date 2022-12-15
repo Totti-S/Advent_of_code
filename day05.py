@@ -1,7 +1,7 @@
 from collections import deque
 from copy import deepcopy
 def main():
-    with open("data/day5_data.txt", "r") as f:
+    with open("data/day05_data.txt", "r") as f:
         data = f.read()
 
     # Data has two parts: creates and moving order

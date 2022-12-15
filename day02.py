@@ -1,4 +1,6 @@
 def main():
+    with open("data/day02_data.txt", "r") as f:
+        data = f.readlines()
 
     def rps(p1, p2):
         if p1 == "A": #Rock
@@ -34,9 +36,6 @@ def main():
             if p2 == "X": return 2
             elif p2 == "Y": return 6
             else: return 7
-
-    with open("data/day2_data.txt", "r") as f:
-        data = f.readlines()
 
     ascii_X = ord('X')
     player2_score_counter = 0

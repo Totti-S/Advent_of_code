@@ -1,6 +1,5 @@
 def main():
-
-    with open("data/day7_data.txt", "r") as f:
+    with open("data/day07_data.txt", "r") as f:
         data = f.readlines()
 
     class Dir:
