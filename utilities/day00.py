@@ -3,7 +3,7 @@ def main():
         data = f.readlines()
 
     # Conversion str -> int
-    tmp_to_int = [(map(int, tmp)) for tmp in tmp_list]
+    tmp_to_int = [(map(int, tmp)) for tmp in tmp_to_int]
 
 
 
