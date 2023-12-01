@@ -1,70 +1,51 @@
-def main():
+def main(mode = 'silver'):
     with open("data/day01_data.txt", "r") as f:
         data = f.read().splitlines()
 
-    numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
-    def convert_to_number(value:str, reverse:bool):
+    # Solution: Go to first char that is a number. Check for string before the first 
+    #           found number for potential spelled number, if yes use that instead as a solution
+    #           Do only once for forward and backwards sides. Use filpped number 'names' 
+    #           for backwards comparison.
+
+    # Silver is only for numbers -> use mode varaible to switch
+
+    def convert_to_number(value:str, reverse:bool) -> str | None:
+        numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
         num_index = None
-        keep = None
+        found_number = None
         for i, n in enumerate(numbers,1):
             n = n[::-1] if reverse else n
             if n in value:
-                tmp = value.index(n)
-                if num_index is None or tmp < num_index:
-                    num_index = tmp
-                    keep = str(i)
-        return keep
+                found_index = value.index(n)
+                if num_index is None or found_index < num_index: # Keep only the earliest seen number
+                    num_index = found_index
+                    found_number = str(i)
+        return found_number
     
-    # Solution: Go to first char that is a number saving all non-numbers to string.
-    #           Check if the string contained a number, if yes use that instead as solution
-    #           Do for both sides -> Use filpped number 'names' fro backwards comparison  
 
-    s = 0
-    for line in data:   # Forwards
-        calibration_number = ''
-        string = ''
-        for chr in line:
+    def go_through_line(line: str, reverse: bool) -> int:
+        for i, chr in enumerate(line):
             if chr.isnumeric():
-                string_number = convert_to_number(string, False)
-                if string_number is not None:
-                    chr = string_number
-                string = ''
-                calibration_number += chr
-                break
-            else:
-                string += chr
+                if mode == 'gold':
+                    string_number = convert_to_number(line[:i], reverse)
+                    if string_number is not None:
+                        chr = string_number
+                return int(chr)
         else:
-            # This is for the test case where there is no number in the string
+            # This is for the 2. test case where there is no number in the string
             # Real data contains at least one number  
-            string_number = convert_to_number(string, False)
+            string_number = convert_to_number(line, reverse)
             if string_number is not None:
                 chr = string_number
-            calibration_number += chr
-    
-        string = ''
-        for chr in line[::-1]:  # Backwards
-            if chr.isnumeric():
-                string_number = convert_to_number(string, True)
-                if string_number is not None:
-                    chr = string_number
-                string = ''
-                calibration_number += chr
-                break
-            else:
-                string += chr
-        else:
-            # This is for the test case where there is no number in the string
-            # Real data contains at least one number  
-            string_number = convert_to_number(string, True)
-            if string_number is not None:
-                chr = string_number
-            calibration_number += chr
+            return int(chr)
 
-        s += int(calibration_number)
-    
-    print(s)
+    calibration_sum = 0
+    for line in data:
+        first = go_through_line(line, False) # Forwards
+        last = go_through_line(line[::-1], True) # Backwards
+        calibration_sum += first *10 + last
 
-
+    print(calibration_sum)
 
 if __name__ == "__main__":
-    main()
+    main()  
