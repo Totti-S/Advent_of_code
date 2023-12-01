@@ -1,6 +1,6 @@
-def main(mode = 'silver'):
-    with open("data/day01_data.txt", "r") as f:
-        data = f.read().splitlines()
+from utilities.get_data import get_data 
+def main(mode = 'silver', data_type=''):
+    data = get_data(__file__, data_type)
 
     # Solution: Go to first char that is a number. Check for string before the first 
     #           found number for potential spelled number, if yes use that instead as a solution
@@ -48,4 +48,5 @@ def main(mode = 'silver'):
     print(calibration_sum)
 
 if __name__ == "__main__":
-    main()  
+    main('silver', 'big')
+    main('gold')
