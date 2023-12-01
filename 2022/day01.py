@@ -1,5 +1,5 @@
 def main():
-    with open("data/day01_data.txt", "r") as f:
+    with open("data/day1_data.txt", "r") as f:
         data = f.readlines()
 
     calorie_counter= 0
@@ -18,13 +18,14 @@ def main():
 
 # Made a second solution
 def main2():
-    with open("data/day01_data.txt", "r") as f:
+    with open("data/day1_data.txt", "r") as f:
         data = f.read()
 
     splitted_data = data.split("\n\n")
     elf_calories = [elf.split("\n") for elf in splitted_data]
     # Conversion str -> int
-    elf_calories = [(map(int, calories)) for calories in elf_calories]
+    elf_calories = [list(map(int, calories)) for calories in elf_calories]
+    print(elf_calories)
     elf_sums = [sum(elf) for elf in elf_calories]
     sorted_elf_sums = sorted(elf_sums)
 
