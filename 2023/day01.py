@@ -47,6 +47,23 @@ def main(mode='silver', data_type=''):
 
     print(calibration_sum) # Result
 
+def regex_solution(mode='silver', data_type=''):
+    import re
+    data = get_data(__file__, data_type)
+    numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+    pattern = r'(?=([1-9]|' + '|'.join(numbers) + '))' if mode == 'gold' else r'[1-9]'
+    total = 0
+    for line in data:
+        calibration_number = ''
+        all_numbers = re.findall(pattern, line)
+        for num in [0, -1]:
+            number = all_numbers[num]
+            calibration_number += str(numbers.index(number)+1) if number in numbers else number
+        total += int(calibration_number)
+    print(total)
+
 if __name__ == "__main__":
-    main('silver', 'big')
-    main('gold', 'big')
+    # main('silver', 'big')
+    # main('gold', 'big')
+    regex_solution()
+    regex_solution('gold')
