@@ -1,6 +1,6 @@
+from utilities.get_data import get_data
 def main():
-    with open("data/day01_data.txt", "r") as f:
-        data = f.readlines()
+    data = get_data(__file__)
 
     # Conversion str -> int
     tmp_to_int = [(map(int, tmp)) for tmp in tmp_to_int]

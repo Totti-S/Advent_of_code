@@ -1,5 +1,5 @@
-from utilities.get_data import get_data 
-def main(mode = 'silver', data_type=''):
+from utilities.get_data import get_data
+def main(mode='silver', data_type=''):
     data = get_data(__file__, data_type)
 
     # Solution: Go to first char that is a number. Check for string before the first 
@@ -7,7 +7,7 @@ def main(mode = 'silver', data_type=''):
     #           Do only once for forward and backwards sides. Use filpped number 'names' 
     #           for backwards comparison.
 
-    # Silver is only for numbers -> use mode varaible to switch
+    # Silver is only for numbers -> use mode varible to switch
 
     def convert_to_number(value:str, reverse:bool) -> str | None:
         numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
@@ -33,7 +33,7 @@ def main(mode = 'silver', data_type=''):
                 return int(chr)
         else:
             # This is for the 2. test case where there is no number in the string
-            # Real data contains at least one number  
+            # Real data contains at least one number
             string_number = convert_to_number(line, reverse)
             if string_number is not None:
                 chr = string_number
@@ -45,8 +45,8 @@ def main(mode = 'silver', data_type=''):
         last = go_through_line(line[::-1], True) # Backwards
         calibration_sum += first *10 + last
 
-    print(calibration_sum)
+    print(calibration_sum) # Result
 
 if __name__ == "__main__":
     main('silver', 'big')
-    main('gold')
+    main('gold', 'big')
