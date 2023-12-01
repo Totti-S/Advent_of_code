@@ -3,57 +3,62 @@ def main():
         data = f.read().splitlines()
 
     numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
-    def convert_to_number(value:str, rev:bool):
+    def convert_to_number(value:str, reverse:bool):
         num_index = None
-        keep = -1
-        if rev:
-            value = value[::-1]
+        keep = None
         for i, n in enumerate(numbers,1):
-            n = n[::-1] if rev else n
+            n = n[::-1] if reverse else n
             if n in value:
                 tmp = value.index(n)
                 if num_index is None or tmp < num_index:
                     num_index = tmp
-                    keep = i
+                    keep = str(i)
         return keep
+    
+    # Solution: Go to first char that is a number saving all non-numbers to string.
+    #           Check if the string contained a number, if yes use that instead as solution
+    #           Do for both sides -> Use filpped number 'names' fro backwards comparison  
 
     s = 0
-    for line in data:
+    for line in data:   # Forwards
         calibration_number = ''
         string = ''
         for chr in line:
             if chr.isnumeric():
-                keep = convert_to_number(string, False)
-                if keep != -1:
-                    a = str(keep)
+                string_number = convert_to_number(string, False)
+                if string_number is not None:
+                    chr = string_number
                 string = ''
-                calibration_number += a
+                calibration_number += chr
                 break
             else:
-                string += a
+                string += chr
         else:
-            keep = convert_to_number(string, False)
-            if keep != -1:
-                a = str(keep)
-            calibration_number += a
-            keep = convert_to_number(string, True)
-            if keep != -1:
-                a = str(keep)
-            calibration_number += a
-            s += int(calibration_number)
-            continue
+            # This is for the test case where there is no number in the string
+            # Real data contains at least one number  
+            string_number = convert_to_number(string, False)
+            if string_number is not None:
+                chr = string_number
+            calibration_number += chr
     
         string = ''
-        for chr in line[::-1]:
+        for chr in line[::-1]:  # Backwards
             if chr.isnumeric():
-                keep = convert_to_number(string[::-1], True)
-                if keep != -1:
-                    chr = str(keep)
+                string_number = convert_to_number(string, True)
+                if string_number is not None:
+                    chr = string_number
                 string = ''
-                calibration_number += a
+                calibration_number += chr
                 break
             else:
-                string += a
+                string += chr
+        else:
+            # This is for the test case where there is no number in the string
+            # Real data contains at least one number  
+            string_number = convert_to_number(string, True)
+            if string_number is not None:
+                chr = string_number
+            calibration_number += chr
 
         s += int(calibration_number)
     
