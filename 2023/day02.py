@@ -21,7 +21,8 @@ def main(mode='silver', data_type=''):
     from math import prod 
     max_cubes, min_cubes = [14,12,13], []
     total, gold_total = 0, 0
-    for i, round in enumerate(round_results,1):
+    start_id = 1 if data_type != 'big' else 0
+    for i, round in enumerate(round_results,start_id):
         power = 1
         could_happen = True
         for j, result in enumerate(round):
@@ -40,5 +41,5 @@ def main(mode='silver', data_type=''):
     print(gold_total)
 
 if __name__ == "__main__":
-    main()
+    main(data_type='big')
     # main('gold')
