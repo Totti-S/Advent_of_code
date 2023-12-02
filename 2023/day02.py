@@ -12,7 +12,7 @@ def main(mode='silver', data_type=''):
             result_cubes = one_grab.split(', ')
             result = [0, 0, 0]
             for c in result_cubes:
-                amount, color = c.split(" ")
+                amount, color = c.split()
                 result[colors.index(color)] = int(amount)
             round.append(result)
         round_results.append(round)
