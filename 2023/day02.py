@@ -18,6 +18,7 @@ def main(mode='silver', data_type=''):
         round_results.append(round)
 
     # Both solutions: Max cubes for silver and min cubes for gold
+    from math import prod 
     max_cubes, min_cubes = [14,12,13], []
     total, gold_total = 0, 0
     for i, round in enumerate(round_results,1):
@@ -31,10 +32,9 @@ def main(mode='silver', data_type=''):
                     min_cubes[k] = result[k]
                 if result[k] > max_cubes[k]:
                     could_happen = False
-        if could_happen:
-            total += i
-        for x in min_cubes:
-            power *= x
+        
+        total += i * could_happen # Not sure if better in anyway, but it's one-liner
+        power *= prod(min_cubes)
         gold_total += power
     print(total)
     print(gold_total)
