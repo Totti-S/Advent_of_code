@@ -3,75 +3,72 @@ from collections import defaultdict
 def main(mode='silver', data_type=''):
     data = get_data(__file__, data_type)
     data = str_number_to_int(data)
+    # Solution: Go through line by line and char by char, when char is integer sequence
+    #           record start and end index of it. Use these indecies to 'scan' for symbols
+    #           that are touching the number. First check the column before start index,
+    #           then the indicies between start and end, and then column after end.
+    #
+    # Gold:     If the symbol we find is * then record the number in dictionary using 
+    #           row and col as key. Accept only list that has two entries
+
     gears = defaultdict(list)
-    def check_for_symbol(s,e, val, num):
-        if data[s][e] == "*":
-            gears[(s,e)].append(num)
-        return True if data[s][e] != '.' else val
+    def check_for_symbol(r, c, num):
+        if data[r][c] == "*":
+            gears[(r,c)].append(num)
+        return data[r][c] != '.'
     
-    total = 0
-    gear_sum = 0
-    for i, line in enumerate(data):
-        is_near_symbol = False
-        start, end = None, None
+    total, gear_sum = 0, 0
+    for row, line in enumerate(data):
         number = None
-        for j, char in enumerate(line):
+        def scan(column, middle=False):
+            if row != 0:
+                if check_for_symbol(row-1, column, number): 
+                    return True
+            if not middle:
+                if check_for_symbol(row, column, number): 
+                    return True
+            if row + 1 != len(data):
+                if check_for_symbol(row+1, column, number): 
+                    return True
+            return False
+
+        start, end = None, None
+        for col, char in enumerate(line):
+            if start is not None and end is not None:
+                start, end = None, None
             if type(char) == int:
-                if start is not None:
-                    if j+1 != len(line) and type(line[j+1]) == int:
-                        continue
-                    end = j
-                else:
-                    start = j
-                    if j+1 != len(line) and type(line[j+1]) == int:
-                        continue
-                    else:
-                        end = j
+                if start is None:
+                    start = col
+                if col+1 != len(line) and type(line[col+1]) == int:
+                    continue
+                end = col
                 number = int("".join([str(line[x]) for x in range(start,end+1)]))
-                # check start if not j == 0
-                if start != 0:
-                    if i != 0:
-                        is_near_symbol = check_for_symbol(i-1, start-1, is_near_symbol, number)
-                    is_near_symbol = check_for_symbol(i, start-1, is_near_symbol, number)
-                    if i+1 != len(data):
-                        is_near_symbol = check_for_symbol(i+1, start-1, is_near_symbol, number)
-                if is_near_symbol: 
+                
+                # check start
+                if start != 0 and scan(start-1): 
                     total += number
-                    start, end = None, None
-                    is_near_symbol = False
                     continue
 
                 # check middle
+                middle_check = False
                 for k in range(start, end+1):
-                    if i != 0:
-                        is_near_symbol = check_for_symbol(i-1, k, is_near_symbol, number)
-                    if i+1 != len(data):
-                        is_near_symbol = check_for_symbol(i+1, k, is_near_symbol, number)
-                    if is_near_symbol: break
-                if is_near_symbol: 
+                    middle_check = scan(k, True)
+                    if middle_check: break
+                if middle_check: 
                     total += number
-                    start, end = None, None
-                    is_near_symbol = False
                     continue
 
-                # check end if not j at the end
-                if end+1 != len(line):
-                    if i != 0:
-                        is_near_symbol = check_for_symbol(i-1, end+1, is_near_symbol, number)
-                    is_near_symbol = check_for_symbol(i, end+1, is_near_symbol, number)
-                    if i+1 != len(data):
-                        is_near_symbol = check_for_symbol(i+1, end+1, is_near_symbol, number)
-                if is_near_symbol: 
+                # check end
+                if end+1 != len(line) and scan(end+1): 
                     total += number
-                start, end = None, None
-                is_near_symbol = False
+
     print(total) # Silver
     
     from math import prod
     for gear in gears.values():
         if len(gear) == 2:
             gear_sum += prod(gear)
-    print(gear_sum)
+    print(gear_sum) # Gold
 
 if __name__ == "__main__":
     main()
