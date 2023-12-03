@@ -14,7 +14,8 @@ def get_data(filepath, data_type=''):
 
 def str_number_to_int(data):
     def int_or_str(val:str):
-        test = val if val[0] != "-" else val[1:]
-        return int(val) if test.isdigit() else val
+        # test = val if val[0] != "-" else val[1:]
+        # return int(val) if test.isdigit() else val
+        return int(val) if val.isdigit() else val
     
     return [list(map(int_or_str,line)) for line in data]
