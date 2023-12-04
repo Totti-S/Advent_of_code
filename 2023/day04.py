@@ -10,7 +10,7 @@ def main(mode='silver', data_type=''):
     total = 0
     for i, line in enumerate(data):
         winning, your_numbers = [[int(num) for num in str_nums.split()] for str_nums in line.split("|")]
-        card_wins = sum([(num in winning) for num in your_numbers])
+        card_wins = len(set(winning) & set(your_numbers))  # Creddit for intersection: https://github.com/Leevihovatov/Advent-of-Code-2023/blob/main/day04.py
         if card_wins > 0:
             total += 2** (card_wins-1)
             for x in range(1, card_wins+1):
