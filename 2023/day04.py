@@ -10,10 +10,10 @@ def main(mode='silver', data_type=''):
     total = 0
     for i, line in enumerate(data):
         winning, your_numbers = [[int(num) for num in str_nums.split()] for str_nums in line.split("|")]
-        card_total = sum([(num in winning) for num in your_numbers])
-        if card_total > 0:
-            total += 2** (card_total-1)
-            for x in range(1, card_total+1):
+        card_wins = sum([(num in winning) for num in your_numbers])
+        if card_wins > 0:
+            total += 2** (card_wins-1)
+            for x in range(1, card_wins+1):
                 copies[i+x] += copies[i]
     gold_total = sum(copies)
 
