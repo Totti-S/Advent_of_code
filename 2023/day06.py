@@ -4,15 +4,13 @@ def main(mode='silver', data_type=''):
 
     if mode == 'silver':
         times, distances = [line.split(':')[1].split() for line in data]
+        times = [int(time) for time in times]
+        distances = [int(distance) for distance in distances]
         iterations = [0] * len(times)
-        i = 0
-        for time, distance in zip(times, distances):
-            time = int(time)
-            distance = int(distance)
+        for i, (time, distance) in enumerate(zip(times, distances)):
             for hold_time in range(1, time):
                 iterations[i] += (hold_time * (time- hold_time) > distance) # Note Boolean computation
-            i +=1
-        
+
         from math import prod
         print(prod(iterations))
 
@@ -21,9 +19,5 @@ def main(mode='silver', data_type=''):
         iterations = [hold_time * (time- hold_time) > distance for hold_time in range(1, time)]
         print(sum(iterations))
 
-
-
-
-
 if __name__ == "__main__":
-    main('gold')
+    main()
