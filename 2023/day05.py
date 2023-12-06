@@ -6,7 +6,7 @@ def main(mode='silver', data_type=''):
     seeds = [int(tmp) for tmp in data[0].split(':')[1].split()]
     data.pop(0)
     data.pop(0)
-    print(data)
+    # print(data)
     regions = []
     i = -1
     for line in data:
@@ -97,5 +97,5 @@ def main(mode='silver', data_type=''):
 
 
 if __name__ == "__main__":
-    main('gold', data_type='test')
-    # main('gold')
+    # main('gold', data_type='test')
+    main('gold')
