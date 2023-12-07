@@ -30,57 +30,37 @@ def main(mode='silver', data_type=''):
             new_list.insert(i, hand_and_bid)
         return new_list
     
-    def silver_logic(occurances):
+    def deduce_level(occurances):
+        # Add jokers to highest amount. Idea credit: https://github.com/knuutti/
+        jokers = occurances.pop('J') if mode == 'gold' and 'J' in occurances else 0
         match (len(occurances)):
-            case 1:     # Five of kind
-                rank = 0
+            case 0 | 1: # Five of kind OR All Jokers
+                level = 0
             case 2:     # Four of kind OR full house
-                rank = 1 if max(occurances.values()) == 4 else 2
+                level = 1 if max(occurances.values()) + jokers == 4 else 2
             case 3:     # Three of kind OR two pair
-                rank = 3 if max(occurances.values()) == 3 else 4
+                level = 3 if max(occurances.values()) + jokers == 3 else 4
             case 4:     # One Pair
-                rank = 5
+                level = 5
             case 5:     # High card
-                rank = 6
-        return rank
+                level = 6
+        return level
     
-    def gold_logic(occurances):
-        pre_joker_rank = silver_logic(occurances)
-        if 'J' not in occurances:   # If no jokers present rank is what it needs to be
-            return pre_joker_rank
-
-        # We convert the 'before joker'- rank. This easily preditable 
-        # what the rank should be, if we know what hand we have before
-        rank = -1
-        match (pre_joker_rank):
-            case 0 | 1 | 2: # Five OR four of kind OR full house
-                rank = 0
-            case 3:         # Three of kind
-                rank = 1
-            case 4:         # Two pair
-                rank = 1 if occurances['J'] == 2 else 2
-            case 5:         # One pair
-                rank = 3
-            case 6:         # High card
-                rank = 5
-        return rank
-
-    hand_ranks = [[] for _ in range(0,7)]
-    logic_func = gold_logic if mode == 'gold' else silver_logic
-
+    hand_levels = [[] for _ in range(0,7)]
     for line in data:
         hand, bid = line.split()
         occurances = Counter(hand)
-        rank = logic_func(occurances)
-        hand_ranks[rank].append((list(hand), bid))
-    hand_ranks = [compare_rank(hand_rank) for hand_rank in hand_ranks]
+        level = deduce_level(occurances)
+        hand_levels[level].append((list(hand), bid))
+    
+    hand_levels = [compare_rank(hand_level) for hand_level in hand_levels] # Sort inside the rank
 
     total = 0
-    i = 0
-    for hand_rank in hand_ranks:
-        for hand, bid in hand_rank:
-            total += int(bid) * (len(data) - i)
-            i += 1
+    rank = 0
+    for hand_level in hand_levels:
+        for hand, bid in hand_level:
+            total += int(bid) * (len(data) - rank)
+            rank += 1
 
     print(f'{mode} : {total}')
 if __name__ == "__main__":
