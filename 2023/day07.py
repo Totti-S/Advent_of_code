@@ -2,34 +2,11 @@ from utilities.get_data import get_data
 from collections import Counter
 def main(mode='silver', data_type=''):
     data = get_data(__file__, data_type)
-
-    letters = { "A" : 14, "K" : 13, "Q" : 12, "J" : 11, "T" : 10, "9" : 9, 
-                "8" : 8, "7" : 7, "6" : 6, "5" : 5, "4" : 4, "3" : 3, "2": 2}
+    letters = dict(zip('AKQJT98765432', range(14, 1, -1))) # Credit https://github.com/teippa/
     
     if mode == 'gold':
         letters.update({'J' : 1})
-    
-    def compare_rank(rank_data):
-        new_list = []
-        for hand_and_bid in rank_data:
-            hand, _ = hand_and_bid
-            for i, new_h in enumerate(new_list):
-                h, _ = new_h
-                for card, list_card in zip(hand, h):
-                    card = letters[card]
-                    list_card = letters[list_card]
-                    if card != list_card:
-                        break
-                if card >= list_card:
-                    break
-                else:
-                    continue
-            else:
-                new_list.append(hand_and_bid)
-                continue
-            new_list.insert(i, hand_and_bid)
-        return new_list
-    
+
     def deduce_level(occurances):
         # Add jokers to highest amount. Idea credit: https://github.com/knuutti/
         jokers = occurances.pop('J') if mode == 'gold' and 'J' in occurances else 0
@@ -51,9 +28,9 @@ def main(mode='silver', data_type=''):
         hand, bid = line.split()
         occurances = Counter(hand)
         level = deduce_level(occurances)
-        hand_levels[level].append((list(hand), bid))
-    
-    hand_levels = [compare_rank(hand_level) for hand_level in hand_levels] # Sort inside the rank
+        hand_levels[level].append((list([letters[x] for x in hand]), bid))
+
+    hand_levels = [sorted(hand_level, key=lambda x:x[0],reverse=True) for hand_level in hand_levels]
 
     total = 0
     rank = 0
@@ -63,5 +40,11 @@ def main(mode='silver', data_type=''):
             rank += 1
 
     print(f'{mode} : {total}')
+
 if __name__ == "__main__":
+    # from time import perf_counter_ns
     main('gold')
+    # s = perf_counter_ns()
+    # main('gold', data_type='big')
+    # e = perf_counter_ns()
+    # print(f'per loop: {round((e-s)/1_000_000_000,2)} s')
