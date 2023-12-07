@@ -32,46 +32,42 @@ def main(mode='silver', data_type=''):
     
     def silver_logic(occurances):
         match (len(occurances)):
-            case 1:
+            case 1:     # Five of kind
                 rank = 0
-            case 2:
+            case 2:     # Four of kind OR full house
                 rank = 1 if max(occurances.values()) == 4 else 2
-            case 3:
+            case 3:     # Three of kind OR two pair
                 rank = 3 if max(occurances.values()) == 3 else 4
-            case 4:
+            case 4:     # One Pair
                 rank = 5
-            case 5:
+            case 5:     # High card
                 rank = 6
         return rank
     
     def gold_logic(occurances):
-        match (len(occurances)):
-            case 1:
+        pre_joker_rank = silver_logic(occurances)
+        if 'J' not in occurances:   # If no jokers present rank is what it needs to be
+            return pre_joker_rank
+
+        # We convert the 'before joker'- rank. This easily preditable 
+        # what the rank should be, if we know what hand we have before
+        rank = -1
+        match (pre_joker_rank):
+            case 0 | 1 | 2: # Five OR four of kind OR full house
                 rank = 0
-            case 2:
-                if 'J' in occurances:
-                    rank = 0
-                else:
-                    rank = 1 if max(occurances.values()) == 4 else 2
-            case 3:
-                if max(occurances.values()) == 3:
-                    rank = 1 if 'J' in occurances else 3
-                else:
-                    if 'J' in occurances:
-                        rank = 1 if occurances['J'] == 2 else 2
-                    else:
-                        rank = 4
-            case 4:
-                rank = 3 if 'J' in occurances else 5
-            case 5:
-                rank = 5 if 'J' in occurances else 6
+            case 3:         # Three of kind
+                rank = 1
+            case 4:         # Two pair
+                rank = 1 if occurances['J'] == 2 else 2
+            case 5:         # One pair
+                rank = 3
+            case 6:         # High card
+                rank = 5
         return rank
 
-    hand_ranks = []
-    for i in range(0,7):
-        hand_ranks.append([])
-
+    hand_ranks = [[] for _ in range(0,7)]
     logic_func = gold_logic if mode == 'gold' else silver_logic
+
     for line in data:
         hand, bid = line.split()
         occurances = Counter(hand)
