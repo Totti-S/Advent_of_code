@@ -12,42 +12,40 @@ def main(mode='silver', data_type=''):
         node, L, R = re.findall(r'\w\w\w', line)
         nodes[node] = (L,R)
     
-    inst_index = 0
-    total_moves = 0
+    index, total = 0, 0
     current_position = 'AAA'
     while True:
-        move = instructions[inst_index]
+        move = instructions[index]
         current_position = nodes[current_position][(move == 'R')]   # NOTE Boolean operation:
-        total_moves += 1                                            # False -> Left, True -> Right
-        inst_index += 1
+        total += 1                                            # False -> Left, True -> Right
+        index += 1
         if current_position == 'ZZZ':
             break
-        if inst_index == len(instructions):
-            inst_index = 0
+        if index == len(instructions):
+            index = 0
 
-    print(f'Silver : {total_moves}')
+    print(f'Silver : {total}')
 
     starting_positions = [node for node in nodes if node.endswith('A')]
     loop_lengths = []
     # Knowing something about the solution we can assume that first we hit endpoint 
     for current_position in starting_positions:
-        inst_index = 0
-        total_moves = 0
+        index, total = 0, 0
         end_point_found = False
         while True:
-            move = instructions[inst_index]
+            move = instructions[index]
             current_position = nodes[current_position][(move == 'R')]   # NOTE Boolean operation:
             if current_position.endswith('Z'):                          # False -> Left, True -> Right
                 if end_point_found:
-                    loop_lengths[-1] = (total_moves - loop_lengths[-1])
+                    loop_lengths[-1] = (total - loop_lengths[-1])
                     break
                 end_point_found = True
-                loop_lengths.append(total_moves)
+                loop_lengths.append(total)
 
-            total_moves += 1
-            inst_index += 1
-            if inst_index == len(instructions):
-                inst_index = 0
+            total += 1
+            index += 1
+            if index == len(instructions):
+                index = 0
         
     def prime_factors(number,itr, nums = None):
         if nums is None:
