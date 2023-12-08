@@ -49,9 +49,7 @@ def main(mode='silver', data_type=''):
 
     print(total) # Silver
     
-    for gear in gears.values():
-        if len(gear) == 2:
-            gear_sum += gear[0] * gear[1]
+    gear_sum = sum([gear[0] * gear[1] for gear in gears.values() if len(gear) == 2])
     print(gear_sum) # Gold
 
 if __name__ == "__main__":
