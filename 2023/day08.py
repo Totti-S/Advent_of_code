@@ -9,7 +9,7 @@ def main(mode='silver', data_type=''):
 
     nodes = {}
     for line in data:
-        node, L, R = re.findall(r'\w\w\w', line)
+        node, L, R = re.findall(r'\w+', line)
         nodes[node] = (L,R)
     
     index, total = 0, 0
