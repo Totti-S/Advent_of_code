@@ -14,59 +14,59 @@ def main(mode='silver', data_type=''):
     
     inst_index = 0
     total_moves = 0
-    if mode == 'silver':
-        position = 'AAA'
+    current_position = 'AAA'
+    while True:
+        move = instructions[inst_index]
+        current_position = nodes[current_position][(move == 'R')]   # NOTE Boolean operation:
+        total_moves += 1                                            # False -> Left, True -> Right
+        inst_index += 1
+        if current_position == 'ZZZ':
+            break
+        if inst_index == len(instructions):
+            inst_index = 0
+
+    print(f'Silver : {total_moves}')
+
+    starting_positions = [node for node in nodes if node.endswith('A')]
+    loop_lengths = []
+    # Knowing something about the solution we can assume that first we hit endpoint 
+    for current_position in starting_positions:
+        inst_index = 0
+        total_moves = 0
+        end_point_found = False
         while True:
             move = instructions[inst_index]
-            position = nodes[position][(move == 'R')]   # NOTE Boolean operation:
-            total_moves += 1                            # False -> Left, True -> Right
+            current_position = nodes[current_position][(move == 'R')]   # NOTE Boolean operation:
+            if current_position.endswith('Z'):                          # False -> Left, True -> Right
+                if end_point_found:
+                    loop_lengths[-1] = (total_moves - loop_lengths[-1])
+                    break
+                end_point_found = True
+                loop_lengths.append(total_moves)
+
+            total_moves += 1
             inst_index += 1
-            if position == 'ZZZ':
-                break
             if inst_index == len(instructions):
                 inst_index = 0
-    else:
-        starting_positions = [node for node in nodes if node.endswith('A')]
-        loop_lengths = [None] * len(starting_positions)
-
-        for i, position in enumerate(starting_positions):
-            inst_index = 0
-            total_moves = 0
-            end_point_found = False
-            while True:
-                move = instructions[inst_index]
-                position = nodes[position][(move == 'R')]   # NOTE Boolean operation:
-                if position.endswith('Z'):                  # False -> Left, True -> Right
-                    if end_point_found:
-                        loop_lengths[i] = total_moves - loop_lengths[i]
-                        break
-                    end_point_found = True
-                    loop_lengths[i] = total_moves
-
-                total_moves += 1
-                inst_index += 1
-                if inst_index == len(instructions):
-                    inst_index = 0
         
+    def prime_factors(number,itr, nums = None):
+        if nums is None:
+            nums = []
+        if itr == 1:
+            nums.append(number)
+            return nums
+        if number % itr == 0:  #if given number divided by itr or not
+            new_number = int(number/itr)
+            nums = prime_factors(itr, int(sqrt(itr)+1), nums)
+            return prime_factors(new_number, int(sqrt(new_number)+1),nums)
+        return prime_factors(number, itr-1, nums)
+    
+    factors = [prime_factors(x, int(sqrt(x)+1)) for x in loop_lengths]
+    unique_factors = set()
+    for f in factors:
+        unique_factors.update(f)
 
-        def prime_factors(number,itr, nums = None):
-            if nums is None:
-                nums = []
-            if itr == 1:
-                nums.append(number)
-                return nums
-            if number % itr == 0:  #if given number divided by itr or not
-                new_number = int(number/itr)
-                nums = prime_factors(itr, int(sqrt(itr)+1), nums)
-                return prime_factors(new_number, int(sqrt(new_number)+1),nums)
-            return prime_factors(number, itr-1, nums)
-        
-        factors = [prime_factors(x, int(sqrt(x)+1)) for x in loop_lengths]
-        unique_factors = set()
-        for f in factors:
-            unique_factors.update(f)
-
-        total = prod(unique_factors)
+    total = prod(unique_factors)
 
     print(f'{mode} : {total}')
 
