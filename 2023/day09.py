@@ -8,9 +8,7 @@ def main(mode='silver', data_type=''):
             return predict(nxt_itr) + nums[-1] if mode == 'silver' else nums[0] - predict(nxt_itr)
         return nums[-1]
         
-    total = 0
-    for line in data:
-        total += predict(line)
+    total = sum([predict(line) for line in data])
     
     print(f'{mode} : {total}')
 
