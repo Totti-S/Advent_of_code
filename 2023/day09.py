@@ -2,17 +2,15 @@ from utilities.get_data import get_data
 def main(mode='silver', data_type=''):
     data = get_data(__file__, data_type, line_is_numbers=True)
 
-    def find_prediction_val(nums):
-        new_list = [nums[i]-nums[i-1] for i in range(1, len(nums))]
-        if any([x != 0 for x in new_list]):
-            number = find_prediction_val(new_list)
-            return number + nums[-1] if mode == 'silver' else nums[0] - number
-        else:
-            return nums[-1]
+    def predict(nums):  # Better function name from day09 -> https://github.com/knuutti/
+        nxt_itr = [nums[i]-nums[i-1] for i in range(1, len(nums))]
+        if sum(nxt_itr):
+            return predict(nxt_itr) + nums[-1] if mode == 'silver' else nums[0] - predict(nxt_itr)
+        return nums[-1]
         
     total = 0
     for line in data:
-        total += find_prediction_val(line)
+        total += predict(line)
     
     print(f'{mode} : {total}')
 
