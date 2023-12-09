@@ -9,7 +9,6 @@ def main(mode='silver', data_type=''):
         return nums[-1]
         
     total = sum([predict(line) for line in data])
-    
     print(f'{mode} : {total}')
 
 if __name__ == "__main__":
