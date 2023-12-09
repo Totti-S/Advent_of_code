@@ -1,5 +1,4 @@
 from utilities.get_data import get_data
-import re
 def main(mode='silver', data_type=''):
     data = get_data(__file__, data_type)
     
