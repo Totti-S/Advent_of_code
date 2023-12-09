@@ -1,5 +1,5 @@
 import os
-def get_data(filepath, data_type=''):
+def get_data(filepath, data_type='', line_is_numbers=False):
 
     file = os.path.realpath(filepath)
     name = file.split('/')[-1].rstrip('.py')
@@ -9,13 +9,7 @@ def get_data(filepath, data_type=''):
 
     with open(path, "r") as f:
         data = f.read().splitlines()
+        if line_is_numbers:
+            data = [[int(x) for x in line.split()] for line in data]
 
     return data
-
-def str_number_to_int(data):
-    def int_or_str(val:str):
-        # test = val if val[0] != "-" else val[1:]
-        # return int(val) if test.isdigit() else val
-        return int(val) if val.isdigit() else val
-    
-    return [list(map(int_or_str,line)) for line in data]
