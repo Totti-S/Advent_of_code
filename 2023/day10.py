@@ -1,21 +1,20 @@
-from collections import defaultdict, Counter
 from utilities.get_data import get_data
 def main(mode='silver', data_type=''):
     data = get_data(__file__, data_type, line_is_numbers=False)
 
-    # print(data)
+    North = (-1,0)
+    East = (0,1)
+    South = (1,0)
+    West = (0,-1)
+
     columns = len(data[0])
     rows = len(data)
-    # First find S
-    S_x = None
-    S_y = None
+    S_x, S_y = None, None
     for i,line in enumerate(data):
         if 'S' in line:
-            S_x = line.index('S')
+            S_x, S_y= line.index('S'), i 
             S_y = i
-            break
 
-    print(S_x, S_y)
     directions = []
     if S_x != 0:
         if data[S_y][S_x-1] != '.':
@@ -31,33 +30,29 @@ def main(mode='silver', data_type=''):
             directions.append((S_y+1,S_x))
 
     acceptable_symbols = {
-        (1,0) : '|LXJS', # v
-        (0,1) : '7-JXS', # >
-        (-1,0) : 'XF|7S', # ^
-        (0,-1) : 'FXL-S' # <
+        South : '|LXJS', # v
+        East : '7-JXS', # >
+        North : 'XF|7S', # ^
+        West : 'FXL-S' # <
     }
     transformation = {
-        0: (1,0),
-        1: (0,1),
-        2: (-1,0),
-        3: (0,-1),
-        4: None 
+        0: South,
+        1: East,
+        2: North,
+        3: West,
+        4: None # Starting position
     }
     
-    # print(directions)
     found_loops = []
     for direction in directions:
-        # print('moi')
         found_loop = False
         current_pos = (S_y, S_x)
         maybe_loop = []
-        stack = [direction]
-        while stack:
-            next_pos = stack.pop(0)
+        next_pos = direction
+        while True:
             next_dir = (next_pos[0]-current_pos[0], next_pos[1]-current_pos[1])
             y,x = next_pos
             next_symbol = data[y][x]
-            # print(next_pos, next_symbol)
             if next_symbol in acceptable_symbols[next_dir]:
                 maybe_loop.append(next_pos)
                 trans = acceptable_symbols[next_dir].index(next_symbol)
@@ -66,67 +61,46 @@ def main(mode='silver', data_type=''):
                     found_loop = True
                     break
                 current_pos = next_pos
-                stack.append((next_pos[0]+tmp[0],next_pos[1]+tmp[1]))
+                next_pos = (next_pos[0]+tmp[0],next_pos[1]+tmp[1])
+                continue
+            break
 
         if found_loop:
             found_loops.append(maybe_loop)
 
-    # print(found_loops)
+    main_loop = found_loops[0]
+    farthest_point = int(len(main_loop)/2)
+    print(f'Silver : {farthest_point}')
 
-    max_len = 0
-    for loop in found_loops:
-        length = len(loop)
-        far_poin = int(length / 2)
-        max_len = far_poin if max_len < far_poin else max_len
-
-    print(f'Silver : {max_len}')
-
-    main_loop = found_loops.pop(0)
-    # print(main_loop)
-
-    pipe_1 = main_loop[-2]
-    pipe_2 = main_loop[0]
-    jotain = (pipe_1[0]-pipe_2[0], pipe_1[1] - pipe_2[1])
-    # print(jotain)
     
-    # find handness of the loop:
-    loc = (S_y, S_x)
+    # Find handness of the loop (Rotation direction):
+    current_location = (S_y, S_x)
     turn = ''
     for location in main_loop:
-        # print('location',loc)
-        dir = (location[0] - loc[0], location[1]-loc[1])
-        # print('direction', dir)
+        direction = (location[0] - current_location[0], location[1]-current_location[1])
         y,x = location
         next_symbol = data[y][x]
         if next_symbol == 'S': break
         elif next_symbol not in '-|':
-            match (dir):
-                case (0,1): # -> 
-                    turn += 'R' if next_symbol == '7' else 'L'
-                case (0,-1): # <-
-                    turn += 'R' if next_symbol == 'L' else 'L'
-                case (1,0): # v
-                    turn += 'R' if next_symbol == 'J' else 'L' 
-                case (-1,0):
-                    turn += 'R' if next_symbol == 'F' else 'L'
-        # else: 
-            # print('symbol', next_symbol)
+            if direction == East:
+                turn += 'R' if next_symbol == '7' else 'L'
+            elif direction == West:
+                turn += 'R' if next_symbol == 'L' else 'L'
+            elif direction == South:
+                turn += 'R' if next_symbol == 'J' else 'L'
+            elif direction == North:
+                turn += 'R' if next_symbol == 'F' else 'L'
+        
+        current_location = location
 
-        loc = location
-
-    R_count = turn.count('R')
-    L_count = turn.count('L')
-    # print(turn)
-    if L_count > R_count:
-        handness = 'L'
-    elif L_count < R_count:
-        handness = 'R'
-    else:
-        assert True, 'Dont come here LR'
+    handness = 'L' if turn.count('L') > turn.count('R') else 'R'
     
-    # print(handness)
+    # Replace S with pipe pieace
+    last_pipe = main_loop[-2]
+    first_pipe = main_loop[0]
+    difference = (last_pipe[0]-first_pipe[0], last_pipe[1] - first_pipe[1])
 
-    match (jotain):
+    match difference:
         case (0,2) | (0,-2):
             sym = '-'
         case (2,0) | (-2,0):
@@ -140,58 +114,50 @@ def main(mode='silver', data_type=''):
         case (-1,-1):
             sym = "7"
     data[S_y] = data[S_y].replace('S', sym)
-    print(sym)
+
+    # We go pipes in the loop piece by piece scanning through tiles
+    # that are located inside loop. We use 'handness' to represent the
+    # clock-wise or counter clock-wise rotation of loop. Using that knowledge
+    # we can determine which tiles are inside of the loop
 
     tiles = set()
-    loc = (S_y, S_x)
+    current_location = (S_y, S_x)
     for location in main_loop:
-        dir = (location[0] - loc[0], location[1]-loc[1])
+        direction = (location[0] - current_location[0], location[1] - current_location[1])
 
         y,x = location
         pipe = data[y][x]
         match (pipe):
             case '-':
                 if handness == 'R':
-                    check_dir = [(1,0)] if dir[1] == 1 else [(-1,0)]
+                    check_dir = [South] if direction[1] == 1 else [North]
                 else:
-                    check_dir = [(-1,0)] if dir[1] == 1 else [(1,0)]
+                    check_dir = [North] if direction[1] == 1 else [South]
             case '|':
                 if handness == 'R':
-                    check_dir = [(0,-1)] if dir[0] == 1 else [(0,1)]
+                    check_dir = [West] if direction[0] == 1 else [East]
                 else:
-                    check_dir = [(0,1)] if dir[0] == 1 else [(0,-1)]
+                    check_dir = [East] if direction[0] == 1 else [West]
             case 'F':
-                if handness == 'R' and dir == (-1,0):
-                    loc = location
+                if handness == 'R' and direction == North or handness == 'L' and direction == West:
+                    current_location = location
                     continue
-                if handness == 'L' and dir == (0,-1):
-                    loc = location
-                    continue
-                check_dir = [(-1,0), (0,-1)]     
+                check_dir = [North, West]     
             case 'L':
-                if handness == 'R' and dir == (0,-1):
-                    loc = location
+                if handness == 'R' and direction == West or handness == 'L' and direction == South:
+                    current_location = location
                     continue
-                if handness == 'L' and dir == (1,0): 
-                    loc = location
-                    continue          
-                check_dir = [(1,0), (0,-1)]   
+                check_dir = [South, West]   
             case '7':
-                if handness == 'R' and dir == (0,1):
-                    loc = location
+                if handness == 'R' and direction == East or handness == 'L' and direction == North:
+                    current_location = location
                     continue
-                if handness == 'L' and dir == (-1,0):
-                    loc = location
-                    continue
-                check_dir = [(-1,0), (0,1)]
+                check_dir = [North, East]
             case 'J':
-                if handness == 'R' and dir == (1,0):
-                    loc = location
+                if handness == 'R' and direction == South or handness == 'L' and direction == East:
+                    current_location = location
                     continue
-                if handness == 'L' and dir == (0,1):
-                    loc = location
-                    continue
-                check_dir = [(1,0), (0,1)]
+                check_dir = [South, East]
             case _:
                 assert False, f'Dont come here {pipe}' 
         
@@ -203,18 +169,12 @@ def main(mode='silver', data_type=''):
                     break
                 if tmp_location[1] < 0 or tmp_location[1] == columns:
                     break
-                y,x = tmp_location
                 if tmp_location in main_loop:
                     break
-                
-                if tmp_location == (0,6):
-                    print(location, tmp_location)
-
                 tiles.add(tmp_location)
 
-        loc = location
+        current_location = location
 
-    # print(f'Counts {tiles}')
     total = len(tiles)
 
     # tiles = list(tiles)
