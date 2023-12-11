@@ -1,11 +1,13 @@
 from utilities.get_data import get_data
 def main(mode='silver', data_type=''):
-    data = get_data(__file__, data_type)
+    data = get_data(__file__, data_type, line_is_numbers=False)
 
-    # Conversion str -> int
-    tmp_to_int = [(map(int, tmp)) for tmp in tmp_to_int]
-
-
+    print(data)
+    for line in data:
+        pass
+    
+    total = 0
+    print(f'{mode} : {total}')
 
 if __name__ == "__main__":
-    main()
+    main(data_type='test')
