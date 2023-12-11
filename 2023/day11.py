@@ -2,14 +2,10 @@ from utilities.get_data import get_data
 from operator import sub  # I use this to do tuple math with maps 
 def main(mode='silver', data_type=''):
     data = get_data(__file__, data_type, line_is_numbers=False)
-    max_rows = len(data)
-    max_columns = len(data[0])
 
-    row_counts = [line.count('#') for line in data]
-    col_counts = ["".join([x[i] for x in data]).count('#') for i in range(0, max_columns)]
+    row_expanding = [not line.count('#') for line in data]
+    col_expanding = [not "".join([x[i] for x in data]).count('#') for i in range(0, len(data[0]))]
 
-    col_expanding = [not c for c in col_counts]
-    row_expanding = [not r for r in row_counts]
     galaxies = []
     for i,line in enumerate(data):
         alls = [j for j,x in enumerate(line) if x=='#']
