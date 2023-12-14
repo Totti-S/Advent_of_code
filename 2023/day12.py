@@ -1,4 +1,5 @@
 from utilities.get_data import get_data
+from jotain import kakka
 def main(mode='silver', data_type=''):
     data = get_data(__file__, data_type, line_is_numbers=False)
 
@@ -30,12 +31,13 @@ def main(mode='silver', data_type=''):
     # print(data)
     total = 0
     ei_loppu = []
-    for line in data:
+    for i,line in enumerate(data):
         spring_row, damaged = line.split()
         damaged = damaged.split(',')
         damaged = [int(x) for x in damaged]
-        # print()
-        # print('Alku', spring_row, damaged)
+        # # print()
+        # if i == 808:
+        #     print('Alku', spring_row, damaged)
         check_if_same = ('',[])
         while check_if_same != (spring_row, damaged):
             check_if_same = (spring_row, damaged)
@@ -74,13 +76,13 @@ def main(mode='silver', data_type=''):
                 spring_rows.pop()
                 damaged.pop()
             if not damaged:
-                break    
-            if len(spring_rows[0]) == damaged[0] and "#" in spring_row[0]:
+                break
+            if len(spring_rows[0]) == damaged[0] and "#" in spring_rows[0]:
                 spring_rows.pop(0)
                 damaged.pop(0)
             if not damaged:
                 break
-            if len(spring_rows[-1]) == damaged[-1] and "#" in spring_row[-1]:
+            if len(spring_rows[-1]) == damaged[-1] and "#" in spring_rows[-1]:
                 spring_rows.pop()
                 damaged.pop()
             # if not damaged:
@@ -114,12 +116,15 @@ def main(mode='silver', data_type=''):
                 spring_row = spring_row[:-2]
             if not damaged:
                 break
-
+            
+            # if i == 808:
+            #     print('Väli', spring_row, damaged)
             # first_value = spring_row.split('.')[0]
             # if len(damaged) > 1 and '#' in first_value and len(first_value) < sum(damaged[0:2]):
             #     combinations = totti_fun(first_value, damaged[0])
 
-
+        # if i == 808:
+        #     print('Loppu', spring_row, damaged)
 
         
         if not damaged:
@@ -150,14 +155,13 @@ def main(mode='silver', data_type=''):
             damaged = []
         elif len(spring_row.split('.')) == 1 and spring_row:
             if "#" in spring_row:
+                # print(f'2. {spring_row}, {damaged}')
                 maximum_combinations = 0
             else:
                 maximum_combinations = teijo_fun(spring_row, damaged)
-                # print(f'2. {spring_row}, {damaged} -> {maximum_combinations}')
-                # print(len(spring_row), sum(damaged), len(damaged))
-            total += maximum_combinations - 1     
-            spring_row = ''
-            damaged = []
+                total += maximum_combinations - 1     
+                spring_row = ''
+                damaged = []
         elif all([dmg == 1 for dmg in damaged]):
             c = spring_row.count('#')
             spring_row = spring_row.replace('?#?','.').replace('?#','').replace('#?','')
@@ -208,6 +212,13 @@ def main(mode='silver', data_type=''):
             total += combinations - 1
             spring_row = ''
             damaged = []
+        elif spring_row.count('#') == 0:
+            # print(f'4. {spring_row}, {damaged} -> ', end='')
+            combinations = kakka(spring_row, damaged)
+            total += combinations - 1
+            # print(combinations)
+            spring_row = ''
+            damaged = []
                     
 
         # print('Loppu', spring_row, damaged)
@@ -216,32 +227,10 @@ def main(mode='silver', data_type=''):
             total += 1
             continue
 
-        ei_loppu.append((spring_row, damaged))
-
-        # i = 0
-        # for spring in spring_row:
-        #     total_2 = 1
-        #     # print(spring_row, damaged)
-        #     if spring.count('#') == damaged[i]:
-        #         i += 1
-        #         total_2 *= 1
-        #         continue
-        #     elif len(spring) - 1 == damaged[i]:
-        #         i += 1
-        #         total_2 *= 2
-        #         continue
-        #     elif len(spring) > damaged[i]+1:
-        #         pass
-                
-        #     else:
-        #         assert True, f'Dont come here {spring}, {i}, {damaged[i]}'
-        #     i+=1
-        #     # print(total_2)
-        # total += total_2
-        # # print(total_2)
+        ei_loppu.append((spring_row, damaged, i))
     
-    for i,x in ei_loppu:
-        print(i, x)
+    for ei in ei_loppu:
+        print(*ei)
     print(f'Käsittelemättä vielä: {len(ei_loppu)}')
 
     print(f'{mode} : {total}')
