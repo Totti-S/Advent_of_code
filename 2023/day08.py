@@ -54,7 +54,7 @@ def main(mode='silver', data_type=''):
             nums.append(number)
             return nums
         if number % itr == 0:  #if given number divided by itr or not
-            new_number = int(number/itr)
+            new_number = number // itr
             nums = prime_factors(itr, int(sqrt(itr)+1), nums)
             return prime_factors(new_number, int(sqrt(new_number)+1),nums)
         return prime_factors(number, itr-1, nums)

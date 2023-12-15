@@ -13,7 +13,7 @@ def main():
     for sack in data:
         sack = sack.strip()
 
-        cutoff = int(len(sack)/2)
+        cutoff = len(sack) // 2
         st_comp = sack[0:cutoff]
         nd_comp = sack[cutoff:]
 
@@ -27,7 +27,7 @@ def main():
     # Second part
 
     # First we group all the elves
-    total_groups = int(len(data)/3)
+    total_groups = len(data) // 3
 
     batches_sum = 0
     for idx in range(total_groups):

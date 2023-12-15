@@ -69,7 +69,7 @@ def main(mode='silver', data_type=''):
             found_loops.append(maybe_loop)
 
     main_loop = found_loops[0]
-    farthest_point = int(len(main_loop)/2)
+    farthest_point = len(main_loop) // 2
     print(f'Silver : {farthest_point}')
 
     

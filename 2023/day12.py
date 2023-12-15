@@ -16,8 +16,8 @@ def main(mode='silver', data_type=''):
         return total
         # return int(sum([(n*(n+1))/2 for n in range(1,x+1)]))
 
-    # Counts from one string group with broken parts (#) inside, 
-    # all possible combinations
+    # Counts all possible combinations from one string group
+    # with broken parts (#) inside, 
     def totti_fun(string, part_value):
         left = string[:string.index('#')]
         right = string[string.rindex('#')+1:]
@@ -173,7 +173,7 @@ def main(mode='silver', data_type=''):
                 damaged = []
             else:
                 # print(spring_row)
-                max_fit = [int((len(x)+1)/2) for x in spring_row.split('.')]    # how many ones fits to group
+                max_fit = [len(x)+1 // 2 for x in spring_row.split('.')]    # how many ones fits to group
                 lenghts = [len(x) for x in spring_row.split('.')]
                 counter = [0] * len(max_fit)
                 valid_perms = []
