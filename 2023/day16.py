@@ -12,74 +12,54 @@ def main(mode='silver', data_type=''):
         'down' : (1,0),
     }
 
-    def produce_new_direction(current_row, current_col, direction):
-        match (data[current_row][current_col]):
-            case '.':
-                new_direction = direction
-            case '/':
-                if direction == 'right':
-                    new_direction = 'up'
-                elif direction == 'left':
-                    new_direction = 'down'
-                elif direction == 'up':
-                    new_direction = 'right'
-                elif direction == 'down':
-                    new_direction = 'left'
-            case '\\':
-                if direction == 'right':
-                    new_direction = 'down'
-                elif direction == 'left':
-                    new_direction = 'up'
-                elif direction == 'up':
-                    new_direction = 'left'
-                elif direction == 'down':
-                    new_direction = 'right'
-            case '-':
-                if direction in ['right', 'left']:
-                    new_direction = direction
-                else:
-                    new_direction = ['right', 'left']
-            case '|':
-                if direction in ['up', 'down']:
-                    new_direction = direction
-                else:
-                    new_direction = ['up', 'down']
-        return new_direction
-    # first iteration
-
     def energized_tiles(starting_row, starting_col, starting_dir):
         # NOTE Starting position has to be outside of the grid
         energized = set()
-        direction_step = direction_travel[starting_dir]
-
-        current_row = starting_row + direction_step[0]
-        current_col = starting_col + direction_step[1]
-        new_dirs = produce_new_direction(current_row, current_col, starting_dir)
-
-        positions =[]
-        if type(new_dirs) is list:
-            for direc in new_dirs:
-                if (current_row, current_col, direc) not in energized:
-                    positions.append((current_row, current_col, direc))
-                    energized.add((current_row, current_col, direc))
-        else:
-            if (current_row, current_col, new_dirs) not in energized:
-                positions.append((current_row, current_col, new_dirs))
-                energized.add((current_row, current_col, new_dirs))
+        positions =[[starting_row, starting_col, starting_dir]]
 
         while positions:
             row, col, direction = positions.pop()
             direction_step = direction_travel[direction]
+            
+            current_row = row + direction_step[0]
+            current_col = col + direction_step[1]
             # Boundaries check
             if direction_step[0] + row < 0 or direction_step[0] + row > max_row_idx:
                 continue
             elif direction_step[1] + col < 0 or direction_step[1] + col > max_col_idx:
                 continue
-            
-            current_row = row + direction_step[0]
-            current_col = col + direction_step[1]
 
-            new_direction = produce_new_direction(current_row, current_col, direction)
+            match (data[current_row][current_col]):
+                case '.':
+                    new_direction = direction
+                case '/':
+                    if direction == 'right':
+                        new_direction = 'up'
+                    elif direction == 'left':
+                        new_direction = 'down'
+                    elif direction == 'up':
+                        new_direction = 'right'
+                    elif direction == 'down':
+                        new_direction = 'left'
+                case '\\':
+                    if direction == 'right':
+                        new_direction = 'down'
+                    elif direction == 'left':
+                        new_direction = 'up'
+                    elif direction == 'up':
+                        new_direction = 'left'
+                    elif direction == 'down':
+                        new_direction = 'right'
+                case '-':
+                    if direction in ['right', 'left']:
+                        new_direction = direction
+                    else:
+                        new_direction = ['right', 'left']
+                case '|':
+                    if direction in ['up', 'down']:
+                        new_direction = direction
+                    else:
+                        new_direction = ['up', 'down']
                 
             if type(new_direction) is list:
                 for direc in new_direction:
@@ -121,4 +101,5 @@ def main(mode='silver', data_type=''):
     print(f'{mode} : {mode_total}')
 
 if __name__ == "__main__":
+    main()
     main('gold')
