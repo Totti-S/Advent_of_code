@@ -6,10 +6,10 @@ def main(mode='silver', data_type=''):
     # print(data)
 
     direction_travel = {
-        'right' : (0,1),
-        'left' : (0,-1),
-        'up' : (-1,0),
-        'down' : (1,0),
+        'R' : (0,1),
+        'L' : (0,-1),
+        'U' : (-1,0),
+        'D' : (1,0),
     }
 
     def energized_tiles(starting_row, starting_col, starting_dir):
@@ -28,38 +28,40 @@ def main(mode='silver', data_type=''):
                 continue
             elif direction_step[1] + col < 0 or direction_step[1] + col > max_col_idx:
                 continue
-
+            
             match (data[current_row][current_col]):
                 case '.':
                     new_direction = direction
                 case '/':
-                    if direction == 'right':
-                        new_direction = 'up'
-                    elif direction == 'left':
-                        new_direction = 'down'
-                    elif direction == 'up':
-                        new_direction = 'right'
-                    elif direction == 'down':
-                        new_direction = 'left'
+                    match(direction):
+                        case 'R':
+                            new_direction = 'U'
+                        case 'L':
+                            new_direction = 'D'
+                        case 'U':
+                            new_direction = 'R'
+                        case 'D':
+                            new_direction = 'L'
                 case '\\':
-                    if direction == 'right':
-                        new_direction = 'down'
-                    elif direction == 'left':
-                        new_direction = 'up'
-                    elif direction == 'up':
-                        new_direction = 'left'
-                    elif direction == 'down':
-                        new_direction = 'right'
+                    match(direction):
+                        case 'R':
+                            new_direction = 'D'
+                        case 'L':
+                            new_direction = 'U'
+                        case 'U':
+                            new_direction = 'L'
+                        case 'D':
+                            new_direction = 'R'
                 case '-':
-                    if direction in ['right', 'left']:
+                    if direction in ['R', 'L']:
                         new_direction = direction
                     else:
-                        new_direction = ['right', 'left']
+                        new_direction = ['R', 'L']
                 case '|':
-                    if direction in ['up', 'down']:
+                    if direction in ['U', 'D']:
                         new_direction = direction
                     else:
-                        new_direction = ['up', 'down']
+                        new_direction = ['U', 'D']
                 
             if type(new_direction) is list:
                 for direc in new_direction:
@@ -78,24 +80,22 @@ def main(mode='silver', data_type=''):
         return len(unique_positions)
 
     if mode == 'silver':
-        mode_total = energized_tiles(0,-1,'right')
+        mode_total = energized_tiles(0,-1,'R')
     else:
         totals = []
-        # North Bound
+        # North and South Bound
         for i in range(0, max_col_idx):
-            total = energized_tiles(-1, i, 'down')
-            totals.append(total)
+            total_north = energized_tiles(-1, i, 'D')
+            total_south = energized_tiles(max_row_idx+1, i, 'U')
+            totals.append(total_north)
+            totals.append(total_south)
         # West and East Bound
         for i in range(0, max_row_idx):
-            total_west = energized_tiles(i,-1,'right')
-            total_east = energized_tiles(i, max_col_idx+1, 'left')
+            total_west = energized_tiles(i,-1,'R')
+            total_east = energized_tiles(i, max_col_idx+1, 'L')
             totals.append(total_west)
             totals.append(total_east)
 
-        # South Bound
-        for i in range(0, max_col_idx):
-            total = energized_tiles(max_row_idx+1, i, 'up')
-            totals.append(total)
         mode_total = max(totals)
 
     print(f'{mode} : {mode_total}')
