@@ -16,6 +16,6 @@ def get_data(filepath, data_type='', line_is_numbers=False, has_portions=False):
         else:
             data = f.read().splitlines()
             if line_is_numbers:
-                data = [[int(x) for x in line.split()] for line in data]
+                data = [ [int(x) for x in line] for line in data]
 
     return data
