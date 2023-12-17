@@ -16,12 +16,7 @@ def main(mode='silver', data_type=''):
         'D' : (1, 0)
     }
 
-    opposite_direction = {
-        'R' : 'L',
-        'L' : 'R',
-        'U' : 'D',
-        'D' : 'U'
-    }
+    opposite_direction = dict(zip('RLUD', 'LRDU'))
 
     end_row, end_col = max_rows - 1, max_cols -1   # Down right corner is end point
     end_node = (end_row, end_col)
