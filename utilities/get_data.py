@@ -1,6 +1,10 @@
 import os
-def get_data(filepath, data_type='', line_is_numbers=False, has_portions=False):
-
+def get_data(
+    filepath: str | os.PathLike,
+    data_type: str = '',
+    line_is_numbers: bool = False,
+    has_portions: bool = False
+):
     file = os.path.realpath(filepath)
     name = file.split('/')[-1].rstrip('.py')
     if data_type != '':
