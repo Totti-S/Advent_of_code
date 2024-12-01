@@ -10,10 +10,10 @@ def get_data(
     file = os.path.realpath(filepath)
     file_name_list = file.split('/')
     name = file_name_list[-1].rstrip('.py')
-    year = file_name_list[-2]
+    # year = file_name_list[-2]
     if data_type != '':
         data_type = '_' + data_type
-    path = f'{year}/data/{name}{data_type}_data.txt'
+    path = f'data/{name}{data_type}_data.txt'
 
     with open(path, "r") as f:
         if has_portions:

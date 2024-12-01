@@ -1,3 +1,5 @@
+import sys
+sys.path.append('..')
 from utilities.get_data import get_data
 def main(mode='silver', data_type=''):
     data = get_data(__file__, data_type)

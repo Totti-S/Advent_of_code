@@ -1,3 +1,5 @@
+import sys
+sys.path.append('..')
 from utilities.get_data import get_data
 from utilities.alias_type import Mode
 
