@@ -1,4 +1,6 @@
 import os
+import re
+
 def get_data(
     filepath: str | os.PathLike,
     data_type: str = '',
@@ -20,6 +22,7 @@ def get_data(
         else:
             data = f.read().splitlines()
             if line_is_numbers:
-                data = [ [int(x) for x in line] for line in data]
+                data = [re.findall(r'\d+', line) for line in data]
+                data = [list(map(int, line)) for line in data] # Convert
 
     return data
