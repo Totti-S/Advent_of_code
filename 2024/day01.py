@@ -1,35 +1,29 @@
 from utilities.get_data import get_data
 from utilities.alias_type import Mode
 
+import operator
 from collections import Counter
 
 def main(mode: Mode ='silver', data_type: str = ''):
-    data = get_data(__file__, data_type, line_is_numbers=False)
+    data = get_data(__file__, data_type, line_is_numbers=True)
 
-    print(data)
-    st, nd = [], []
-    for line in data:
-        print(line)
-        j, k = line.split('   ')
-        
+    left, right = [], []
+    for x, y in data:
+        left.append(x)
+        right.append(y)
 
-        st.append(int((j.strip())))
-        nd.append(int((k.strip())))
-
-    st.sort()
-    nd.sort()
-    if mode == 'silver':
-            
-        distances = []
-        for i, _ in enumerate(st):
-            distances.append(abs(st[i] - nd[i]))
+    if mode == 'silver' or mode == 'both':
+        left.sort()
+        right.sort()
+        distances = [abs(d) for d in map(operator.sub, left, right)]
         total = sum(distances)
+        print(f'silver : {total}')
 
-    elif mode == 'gold':
-        occurances = Counter(nd)
-        multi = [num * occurances[num] for num in st]
+    if mode == 'gold' or mode == 'both':
+        occurances = Counter(right)
+        multi = [num * occurances[num] for num in left]
         total = sum(multi)
+        print(f'gold : {total}')
 
-    print(f'{mode} : {total}')
 if __name__ == "__main__":
-    main(mode='gold', data_type='')
+    main(mode='both', data_type='')
