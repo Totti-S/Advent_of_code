@@ -43,4 +43,5 @@ def main(mode: Mode ='silver', data_type: str = ''):
         print(f'{gold=}')
 
 if __name__ == "__main__":
+
     main(mode="both", data_type='')

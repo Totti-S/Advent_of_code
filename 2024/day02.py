@@ -14,7 +14,7 @@ def main(mode: Mode ='silver', data_type: str = ''):
             if diff == 0 or abs(diff) > 3:
                 if boolean:
                     return False
-                bad_indicies.add([i, i+1])
+                bad_indicies.update([i, i+1])
             if positive_increment is None:
                 positive_increment = diff > 0
             if positive_increment ^ (diff > 0): # XOR
@@ -49,4 +49,4 @@ def main(mode: Mode ='silver', data_type: str = ''):
 
 if __name__ == "__main__":
     main(data_type='test')
-    main(data_type='')
+    main(mode='both', data_type='')
