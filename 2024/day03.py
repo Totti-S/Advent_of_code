@@ -2,6 +2,7 @@ import sys
 sys.path.append('..')
 from utilities.get_data import get_data
 from utilities.alias_type import Mode
+from utilities.test_framework import test
 
 import re
 
@@ -36,12 +37,12 @@ def main(mode: Mode ='silver', data_type: str = ''):
 
     if mode in ["silver", "both"]:
         silver = process_commands(all_commands)
-        print(f'{silver=}')
+        print(f'{silver = }')
 
     if mode in ["gold", "both"]:
         gold = process_commands(acceptable_commands)
-        print(f'{gold=}')
+        print(f'{gold = }')
 
 if __name__ == "__main__":
-
     main(mode="both", data_type='')
+    test(main, __file__, (161, None), (None, 48))
