@@ -33,6 +33,8 @@ def main():
         pass
     with open(f'{base_path}_test_data.txt', 'w'):
         pass
+    with open(f'{base_path}_test2_data.txt', 'w'):
+        pass
 
 if __name__ == '__main__':
     main()
