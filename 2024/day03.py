@@ -16,13 +16,11 @@ def main(mode: Mode ='silver', data_type: str = ''):
     commands: list[re.Match] = list(re.finditer(r'mul\(\d+\,\d+\)', data))
     for command in commands:
         start_idx = command.start()
-        behind_line = data[:start_idx]
-        behind_line = behind_line[::-1]
 
-        yes = behind_line.find(")(od")
-        no = behind_line.find(")(t'nod")
+        yes = data[:start_idx].rfind("do()")
+        no = data[:start_idx].rfind("don't")
         # For gold solution
-        if no == -1 or (yes < no and yes != -1):
+        if no == -1 or (yes > no and yes != -1):
             acceptable_commands.append(command.group())
         # For silver solution
         all_commands.append(command.group())
