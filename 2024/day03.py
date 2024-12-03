@@ -9,11 +9,11 @@ def main(mode: Mode ='silver', data_type: str = ''):
     data = get_data(__file__, data_type, line_is_numbers=False)
 
     data: str = "".join(data)
-    total = 0
     commands: list[re.Match]
     acceptable_commands: list[str] = []
+    all_commands: list[str] = []
 
-    commands = list(re.finditer(r'mul\(\d+\,\d+\)', data))
+    commands: list[re.Match] = list(re.finditer(r'mul\(\d+\,\d+\)', data))
     for command in commands:
         start_idx = command.start()
         behind_line = data[:start_idx]
@@ -21,15 +21,28 @@ def main(mode: Mode ='silver', data_type: str = ''):
 
         yes = behind_line.find(")(od")
         no = behind_line.find(")(t'nod")
-        if no == -1 or (yes < no and yes != -1) or mode == "silver":
+        # For gold solution
+        if no == -1 or (yes < no and yes != -1):
             acceptable_commands.append(command.group())
+        # For silver solution
+        all_commands.append(command.group())
 
-    for command in acceptable_commands:
-        numbers = command.lstrip("mul(").rstrip(')').split(",")
-        numbers = list(map(int, numbers))
-        total += int(numbers[0]) * int(numbers[1])
 
-    print(f'{mode} : {total}')
+    def process_commands(commands: list[str]) -> int:
+        total = 0
+        for command in commands:
+            numbers = command.lstrip("mul(").rstrip(')').split(",")
+            numbers = list(map(int, numbers))
+            total += int(numbers[0]) * int(numbers[1])
+        return total
+
+    if mode in ["silver", "both"]:
+        silver = process_commands(all_commands)
+        print(f'{silver=}')
+
+    if mode in ["gold", "both"]:
+        gold = process_commands(acceptable_commands)
+        print(f'{gold=}')
 
 if __name__ == "__main__":
-    main(mode="gold", data_type='')
+    main(mode="both", data_type='')
