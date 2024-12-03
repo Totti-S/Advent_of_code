@@ -28,7 +28,7 @@ class Coordinate:
             x = self.x - other
             y = self.y - other
         return Coordinate(x=x, y=y)
-    
+
     def __isub__(self, other):
         return self.__sub__(other)
 
@@ -40,10 +40,10 @@ class Coordinate:
             x = self.x + other
             y = self.y + other
         return Coordinate(x=x, y=y)
-    
+
     def __iadd__(self, other):
         return self.__add__(other)
-    
+
     def __mul__(self, other):
         if isinstance(other, (tuple, Coordinate)):
             x = self.x * other[0]
@@ -55,12 +55,12 @@ class Coordinate:
 
     def __imul__(self, other):
         return self.__mul__(other)
-    
+
     def __eq__(self, other) -> bool:
         if isinstance(other, (tuple, Coordinate)):
             if isinstance(other, tuple) and len(other) > 2:
                 return False
-            return self.x == other[0] and self.y == other[1]    
+            return self.x == other[0] and self.y == other[1]
         return False
 
     def __iter__(self):
@@ -75,14 +75,14 @@ class Coordinate:
             self.x = item
         else:
             self.y = item
-    
+
     @classmethod
     def is_cardinal_direction(cls, c) -> bool:
         assert isinstance(c, (tuple, Coordinate)),(
             f"'is_cardinal_direction' takes in only tuple or Coordinate. Input type: {type(c)}"
         )
         return bool(c[0] ^ c[1])
-    
+
     @classmethod
     def get_cardinal_direction(cls, c):
         assert isinstance(c, (tuple, Coordinate)),(
@@ -93,10 +93,10 @@ class Coordinate:
         norm_x = c[0] // abs(c[0]) if c[0] else 0
         norm_y = c[1] // abs(c[1]) if c[1] else 0
         return Coordinate(norm_x, norm_y)
-    
+
 class GRID:
     def __init__(
-        self, 
+        self,
         x: int,
         y: int,
         starting_point: Coordinate | tuple = Coordinate(0,0),
@@ -114,7 +114,7 @@ class GRID:
             starting_point = Coordinate(*starting_point)
         self.current_point = starting_point
         self.loopover = loopover
- 
+
     def move(self, dir: int | Coordinate | tuple[int, int]):
         self.current_point += dir
         for i, max_coord in enumerate([self.x, self.y]):
@@ -129,7 +129,7 @@ class GRID:
                     self.current_point[i] += max_coord
                 else:
                     self.current_point[i] = 0
-            
+
     def move_to_edge(self, dir: Coordinate | tuple[int, int]):
         cardinal_direction = Coordinate.get_cardinal_direction(dir)
         match (cardinal_direction):
@@ -143,7 +143,7 @@ class GRID:
                 self.current_point[0] = 0
             case None:
                 pass
-        
+
 
 if __name__ == "__main__":
     grid = GRID(10, 10, (0, 0), loopover=True)
