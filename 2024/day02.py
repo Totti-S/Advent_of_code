@@ -6,83 +6,47 @@ from utilities.alias_type import Mode
 def main(mode: Mode ='silver', data_type: str = ''):
     data = get_data(__file__, data_type, line_is_numbers=True)
 
-
-    def check_fun(line):
-        # print(line)
-        jotain = None
-        for num, next_num in zip(line[:-1], line[1:]):
-            diff = next_num - num
-            if jotain is None:
-                jotain = next_num < num
-            if jotain and next_num > num:
-                return False
-            elif not jotain and next_num < num:
-                return False
-            elif next_num == num:
-                return False
-            elif abs(diff) > 3:
-                return False
-        print("True")
-        return True
-
-    total = 0
-    for line in data:
-        jotain = None
-        for num, next_num in zip(line[:-1], line[1:]):
-            # print(num, next_num)
-            diff = next_num - num
-            if jotain is None:
-                jotain = next_num < num
-            if jotain and next_num > num:
-                break
-            elif not jotain and next_num < num:
-                break
-            elif next_num == num:
-                break
-            elif abs(diff) > 3:
-                break
-        else:
-            # print("moit")
-            total += 1
-        # print(jotain)
-    print(f'{mode} : {total}')
-    
-    total = 0
-    faulty_list = []
-    for j, line in enumerate(data):
-        faulty_list.append([])
-        jotain = None
+    def is_safe(line: list[int], boolean: bool = False) -> list[int] | bool:
+        bad_indicies = set()
+        positive_increment = None
         for i, (num, next_num) in enumerate(zip(line[:-1], line[1:])):
-            print(num, next_num)
             diff = next_num - num
-            if jotain is None:
-                jotain = next_num < num
-            if jotain and next_num > num:
-                faulty_list[j].append(i)
-            elif not jotain and next_num < num:
-                faulty_list[j].append(i)
-            elif next_num == num:
-                faulty_list[j].append(i)
-            elif abs(diff) > 3:
-                faulty_list[j].append(i)
-        if not faulty_list[j]:
-            total += 1
-    
-    # BRUTE FORCE BABY
-    for i, line in enumerate(faulty_list):
-        if not len(line):
+            if diff == 0 or abs(diff) > 3:
+                if boolean:
+                    return False
+                bad_indicies.add([i, i+1])
+            if positive_increment is None:
+                positive_increment = diff > 0
+            if positive_increment ^ (diff > 0): # XOR
+                if boolean:
+                    return False
+                bad_indicies.update([i-1, i, i+1]) # 'i-1' This address the Test case: "93 95 92 91 90"
+        return bad_indicies if not boolean else True
+
+
+    all_bad_indicies = [is_safe(line) for line in data]
+    silver = sum(not bool(one_list) for one_list in all_bad_indicies)
+    if mode in ["silver", "both"]:
+        print(f'{silver = }')
+
+    if mode not in ["gold", "both"]:
+        return
+
+    gold = silver
+    # Calculate new combinations
+    for line, bad_indicies in zip(data, all_bad_indicies):
+        if not len(bad_indicies):
             continue
-        print(data[i])
-        for idx in range(len(data[i])):
-            new_line = data[i].copy()
-            new_line.pop(idx)
-            if check_fun(new_line):
-                total += 1
+
+        for idx in bad_indicies:
+            new_combination = line.copy()
+            new_combination.pop(idx)
+            if is_safe(new_combination, boolean=True):
+                gold += 1
                 break
 
-    print(f'gold: {total}')
+    print(f'{gold = }')
 
 if __name__ == "__main__":
-    print("test :", end="")
     main(data_type='test')
     main(data_type='')
