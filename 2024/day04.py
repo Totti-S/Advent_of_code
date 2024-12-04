@@ -25,20 +25,20 @@ def main(mode: Mode ='silver', data_type: str = ''):
         left_up = ""
         left_down = ""
         right_up = ""
-        right_side_down = ""
+        right_down = ""
 
         for j in range(0, i+1):
             left_up += data[i-j][j]
             left_down += data[i_max-1-j][i - j]
             right_up += data[i-j][i_max-1 - j]
-            right_side_down += data[i_max-1-j][i_max-1 -i + j]
+            right_down += data[i_max-1-j][i_max-1 -i + j]
 
         diagonal.append(left_up)
         diagonal.append(right_up)
         # Remove the duplicate string
         if i != i_max-1:
             diagonal.append(left_down)
-            diagonal.append(right_side_down)
+            diagonal.append(right_down)
 
     for line in data + transposed + diagonal:
         silver += len(re.findall(r'XMAS', line))
