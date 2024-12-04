@@ -79,7 +79,6 @@ def test(fun: Callable[[Mode, str], None], file_name: str, *expected_results: li
     if not failed and tested == passed:
         print(Fore.GREEN + f"All tests ({tested}) passed!" + Fore.RESET)
     else:
-        print(f"All tests: {tested}")
         print(Fore.RED + f"{failed} test(s) failed" + Fore.RESET)
         print(Fore.GREEN + f"{passed} test(s) passed" + Fore.RESET)
 
