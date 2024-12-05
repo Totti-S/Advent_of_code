@@ -3,9 +3,9 @@ sys.path.append('..')
 from utilities.get_data import get_data
 from utilities.alias_type import Mode
 from utilities.test_framework import test
-from utilities.helper_funs import nums
+from utilities.helper_funs import nums, is_sublist
 
-def main(mode: Mode ='silver', data_type: str = ''):
+def main(mode: Mode ='both', data_type: str = ''):
     data = get_data(__file__, data_type, line_is_numbers=False, has_portions=True)
     silver, gold = 0, 0
 
@@ -28,8 +28,7 @@ def main(mode: Mode ='silver', data_type: str = ''):
                 wrong_orders.append(update)
                 break
         else:
-            middle_index = len(update) // 2
-            silver += update[middle_index]
+            silver += update[len(update) // 2]
     print(f'{silver = }')
 
     # Gold solution:    And here the silver solution that finds total ordering would have helpped.
@@ -41,7 +40,7 @@ def main(mode: Mode ='silver', data_type: str = ''):
     #                       1. The "first" page can't be in the "latter" part of the rules
     #                       2. Other pages must have at least one time appear at the latter part
     #                           -> If pages wouldn't, there would be ambiguity which is the first
-    #                       = Find unique page list of first part of the rules remove all indicies
+    #                       = Find unique page list of first part of the rules, remove all indicies
     #                         that appear in the second part
     #                   This logic can be exdented to find second, third... etc. pages. Just remove
     #                   already found pages from the list. 
@@ -55,31 +54,26 @@ def main(mode: Mode ='silver', data_type: str = ''):
         first_pages = [first for first, _ in all_relavant_rules]
         second_pages = [second for _, second in all_relavant_rules]
 
+        # You could do here the last page as well, because symmetry.
+        # I rather find it so that I can use 'append' 
         first = list(set(first_pages) - set(second_pages))[0]
-        last = list(set(second_pages) - set(first_pages))[0]
 
-        correct_order = [first, last]
-        helpper = [first, last]
+        correct_order = [first]
+        helpper = [first]
         current_page = first
-        i, j = 1, 1
         while len(correct_order) < len(wrong):
-            next_candidates = [nd for st, nd in ordering_rules if st == current_page]
-            next_candidates = [page for page in next_candidates if page not in helpper]
-            filtter_orders = [nd for st, nd in ordering_rules if st in next_candidates and nd in next_candidates]
-            next_candidates = [page for page in next_candidates if page not in filtter_orders]
-            assert len(next_candidates) == 1, f"{next_candidates}"
-            
-            current_page = next_candidates[0]
-            helpper.insert(j, current_page)
-            if current_page not in wrong:
-                j += 1
-                continue
-            correct_order.insert(i, current_page)
-            i += 1
-            j += 1
+            # Find pages that appear in second part of the rule that have current page as a first part
+            next_candidates = [nd for st, nd in ordering_rules if st == current_page and nd not in helpper]
+            # Get rules that dictate the inner order of the candidates. Page can't be the next one 
+            # if the page appers in the second part of the rule
+            cant_be_next = [rule[1] for rule in ordering_rules if is_sublist(rule, next_candidates)]
+            current_page = list(set(next_candidates) - set(cant_be_next))[0]
 
-        middle_index = len(correct_order) // 2
-        gold += correct_order[middle_index]
+            helpper.append(current_page)
+            if current_page in wrong:
+                correct_order.append(current_page)
+
+        gold += correct_order[len(correct_order) // 2]
         
     print(f'{gold = }')
 
