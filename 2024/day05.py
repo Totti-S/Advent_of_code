@@ -12,6 +12,12 @@ def main(mode: Mode ='silver', data_type: str = ''):
     ordering_rules, updates = data
     ordering_rules = [nums(update.split('|')) for update in ordering_rules]
 
+    # I was like: "naaa...aint doing linked list solution. Didn't feel like it"
+
+    # Silver solution:  In order to find out update is in wrong order is to find contradiction 
+    #                   from the rules. We go update page by page and find if there is rule that
+    #                   says page of the right of the current page should be before the current page 
+
     wrong_orders = []
     for update in updates:
         update = nums(update.split(','))
@@ -25,6 +31,22 @@ def main(mode: Mode ='silver', data_type: str = ''):
             middle_index = len(update) // 2
             silver += update[middle_index]
     print(f'{silver = }')
+
+    # Gold solution:    And here the silver solution that finds total ordering would have helpped.
+    #                   I found out that the ordering is circular, although test case didn't.
+    #                   Puzzle can't have circular ordering, otherwise it dosen't work. We can from 
+    #                   that imply that there must be definible "first" page from subset of ordering
+    #                   rules. Rule subset is subset that has one or both of the pages from the update
+    #                   list. 
+    #                       1. The "first" page can't be in the "latter" part of the rules
+    #                       2. Other pages must have at least one time appear at the latter part
+    #                           -> If pages wouldn't, there would be ambiguity which is the first
+    #                       = Find unique page list of first part of the rules remove all indicies
+    #                         that appear in the second part
+    #                   This logic can be exdented to find second, third... etc. pages. Just remove
+    #                   already found pages from the list. 
+    #                   NOTE: If page in the subset rules dosen't apper in the update list use it still
+    #                         to find pages that couple links away from the recently found update page
 
     for wrong in wrong_orders:
         pages_to_check = wrong.copy()
