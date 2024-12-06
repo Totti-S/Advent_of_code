@@ -7,8 +7,8 @@ Mode = t.Literal["silver", "gold", "both"]
 class Coordinate:
     x: int = 0
     y: int = 0
-    N: t.ClassVar[tuple[int, int]] = (0,  1)
-    S: t.ClassVar[tuple[int, int]] = (0, -1)
+    N: t.ClassVar[tuple[int, int]] = (0, -1)
+    S: t.ClassVar[tuple[int, int]] = (0, 1)
     E: t.ClassVar[tuple[int, int]] = (1, 0)
     W: t.ClassVar[tuple[int, int]] = (-1, 0)
     NE: t.ClassVar[tuple[int, int]] = (1, 1)
@@ -67,6 +67,9 @@ class Coordinate:
         yield self.x
         yield self.y
 
+    def __hash__(self):
+        return hash((self.x, self.y))
+
     def __getitem__(self, other: t.Literal[0, 1]):
         return self.x if not other else self.y
 
@@ -93,6 +96,10 @@ class Coordinate:
         norm_x = c[0] // abs(c[0]) if c[0] else 0
         norm_y = c[1] // abs(c[1]) if c[1] else 0
         return Coordinate(norm_x, norm_y)
+    
+    @property
+    def rotate(self):
+        
 
 class GRID:
     def __init__(
@@ -146,5 +153,12 @@ class GRID:
 
 
 if __name__ == "__main__":
-    grid = GRID(10, 10, (0, 0), loopover=True)
+    # grid = GRID(10, 10, (0, 0), loopover=True)
+    
 
+    def fun(l):
+        l.append(5)
+
+    o = []
+    fun(o)
+    print(o)
