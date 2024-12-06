@@ -66,7 +66,7 @@ def main(mode: Mode ='silver', data_type: str = ''):
                 continue
             if right_up not in ["S", "M"]:
                 continue
-            if left_up == right_down or right_up == left_down:
+            if left_up == right_down:
                 continue
             gold += 1
 
