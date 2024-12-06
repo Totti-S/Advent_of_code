@@ -10,7 +10,8 @@ def main(mode: Mode ='both', data_type: str = ''):
     silver, gold = 0, 0
 
     ordering_rules, updates = data
-    ordering_rules = [nums(update.split('|')) for update in ordering_rules]
+    ordering_rules = [nums(rule.split('|')) for rule in ordering_rules]
+    updates = [nums(update.split(',')) for update in updates]
 
     # I was like: "naaa...aint doing linked list solution. Didn't feel like it"
 
@@ -20,11 +21,9 @@ def main(mode: Mode ='both', data_type: str = ''):
 
     wrong_orders = []
     for update in updates:
-        update = nums(update.split(','))
         for i, page in enumerate(update[:-1]):
             pages_to_check = update[i:]
-            fail_condition = sum([(p[0] in pages_to_check) for p in ordering_rules if p[1] == page])
-            if fail_condition:
+            if any([(p[0] in pages_to_check) for p in ordering_rules if p[1] == page]):
                 wrong_orders.append(update)
                 break
         else:
