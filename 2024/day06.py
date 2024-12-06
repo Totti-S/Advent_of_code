@@ -3,7 +3,7 @@ sys.path.append('..')
 from utilities.get_data import get_data
 from utilities.alias_type import Mode, Coordinate
 from utilities.test_framework import test
-from collections.abc import Generator
+from collections.abc import Iterator
 
 def main(mode: Mode ='silver', data_type: str = ''):
     data = get_data(__file__, data_type, line_is_numbers=False)
@@ -26,37 +26,36 @@ def main(mode: Mode ='silver', data_type: str = ''):
     starting_pos = Coordinate(start_x, start_y)
     positions = set([starting_pos])
     dir_and_pos = set([(starting_pos, starting_dir)])
-
-    def move_guard(pos: Coordinate, dir: Coordinate) -> Generator[Coordinate, Coordinate]:
+    
+    def move_guard(pos: Coordinate, direc: Coordinate) -> Iterator[tuple[Coordinate, Coordinate]]:
         while True:
-            next_p = pos + dir
+            next_p = pos + direc
             if next_p.y in [-1, max_coord] or next_p.x in [-1, max_coord]:
                 break
             elif data[next_p.y][next_p.x] == '#':
-                dir = rotate[dir]
+                direc = rotate[direc]
             else:
                 pos = next_p
-            yield pos, dir
+            yield pos, direc
 
-    obstructions: set[Coordinate] = set()
-    pos = starting_pos
+    tested_obstructions: set[Coordinate] = set()
+    pos, direc = starting_pos, starting_dir
     for new_pos, new_dir in move_guard(starting_pos, starting_dir):
         positions.add(new_pos)
-        if pos != new_pos and new_pos not in obstructions:
+        if pos != new_pos and new_pos not in tested_obstructions:
             # Modify this data for moment to find out if this generates a loop
             data[new_pos.y][new_pos.x] = '#'
-            test_set = set([(starting_pos, starting_dir)])
-            for pos_dir in move_guard(starting_pos, starting_dir):
-                if pos_dir in test_set:
-                    obstructions.add(new_pos)
+            test_set = dir_and_pos.copy()
+            for pos_dir in move_guard(pos, direc):
+                if pos_dir in test_set: # loop decetion
+                    gold +=1
                     break
                 test_set.add(pos_dir)
+            tested_obstructions.add(new_pos)
             data[new_pos.y][new_pos.x] = '.'
         dir_and_pos.add((new_pos, new_dir))
-        pos = new_pos
-
+        pos, direc = new_pos, new_dir
     silver = len(positions)
-    gold = len(obstructions)
 
     print(f'{silver = }')
     print(f'{gold = }')
