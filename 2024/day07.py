@@ -4,8 +4,8 @@ from utilities.get_data import get_data
 from utilities.alias_type import Mode
 from utilities.test_framework import test
 from utilities.helper_funs import nums
-from math import prod
 from collections.abc import Generator
+from time import perf_counter
 
 def main(mode: Mode ='silver', data_type: str = ''):
     data = get_data(__file__, data_type, line_is_numbers=False)
@@ -23,8 +23,8 @@ def main(mode: Mode ='silver', data_type: str = ''):
 
     def all_results(numbers: list[int], base3: bool =False) -> Generator[int, None, None]:
         base = 3 if base3 else 2 
-        total = base**(len(numbers)-1) - 1
-        for perm in range(1,total):
+        total = base**(len(numbers)-1)
+        for perm in range(total):
             if base3:
                 perm = ternary(perm).zfill(len(numbers)-1)
                 # Optimization: we have tested all values that dosen't contain '2'
@@ -46,15 +46,6 @@ def main(mode: Mode ='silver', data_type: str = ''):
         result, others = line.split(':')
         result = int(result)
         numbers = nums(others.strip().split(' '))
-
-        if sum(numbers) == result or prod(numbers) == result:
-            silver += result
-            continue
-        elif int(others.replace(' ', '')) == result:
-            gold += result
-            continue
-        elif len(numbers) == 2:
-            continue
         
         for res in all_results(numbers):
             if res == result:
@@ -72,5 +63,8 @@ def main(mode: Mode ='silver', data_type: str = ''):
     print(f'{gold = }')
 
 if __name__ == "__main__":
+    s = perf_counter()
     main("both", '')
+    e = perf_counter()
+    print(f"Aika: {e-s}")
     test(main, __file__, (3749, 11387))
