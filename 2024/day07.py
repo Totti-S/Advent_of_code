@@ -5,38 +5,26 @@ from utilities.alias_type import Mode
 from utilities.test_framework import test
 from utilities.helper_funs import nums
 from collections.abc import Generator
-from time import perf_counter
+from itertools import product
 
 def main(mode: Mode ='silver', data_type: str = ''):
     data = get_data(__file__, data_type, line_is_numbers=False)
     silver, gold = 0, 0
 
-    # Felt very lazy, so pulled this from here: https://stackoverflow.com/a/34559825
-    def ternary(n: int) -> str:
-        if n == 0:
-            return '0'
-        nums = []
-        while n:
-            n, r = divmod(n, 3)
-            nums.append(str(r))
-        return ''.join(reversed(nums))
-
-    def all_results(numbers: list[int], base3: bool =False) -> Generator[int, None, None]:
-        base = 3 if base3 else 2 
-        total = base**(len(numbers)-1)
-        for perm in range(total):
-            if base3:
-                perm = ternary(perm).zfill(len(numbers)-1)
-                # Optimization: we have tested all values that dosen't contain '2'
-                if '2' not in perm:
-                    continue
-            else:
-                perm = f"{perm:b}".zfill(len(numbers)-1)
+    def all_results(numbers: list[int], concat: bool = False) -> Generator[int, None, None]:
+        # From a wiser man (https://github.com/ththarkonen) I was reminded of 'product()' function
+        operators = "+*"
+        if concat:
+            operators += "|"
+        
+        for perm in product(operators, repeat=len(numbers)-1):
             val = numbers[0]
+            if concat and "|" not in perm: # Small optimization
+                continue
             for number, operator in zip(numbers[1:], perm):
-                if operator == '0':
+                if operator == '+':
                     val += number
-                elif operator == '1':
+                elif operator == '*':
                     val *= number
                 else:
                     val = int(f"{val}{number}")
@@ -47,15 +35,10 @@ def main(mode: Mode ='silver', data_type: str = ''):
         result = int(result)
         numbers = nums(others.strip().split(' '))
         
-        for res in all_results(numbers):
-            if res == result:
-                silver += result
-                break
-        else:
-            for res in all_results(numbers, base3=True):
-                if res == result:
-                    gold += result
-                    break
+        if any((result == res) for res in all_results(numbers)):
+            silver += result
+        elif any((result == res) for res in all_results(numbers, concat=True)):
+            gold += result
     
     gold += silver
 
@@ -63,8 +46,5 @@ def main(mode: Mode ='silver', data_type: str = ''):
     print(f'{gold = }')
 
 if __name__ == "__main__":
-    s = perf_counter()
     main("both", '')
-    e = perf_counter()
-    print(f"Aika: {e-s}")
     test(main, __file__, (3749, 11387))
