@@ -6,11 +6,15 @@ import os
 import io
 import re
 # import typing as t
-from colorama import Fore
 from collections import defaultdict
 from collections.abc import Callable
 from contextlib import redirect_stdout
 from .alias_type import Mode
+
+RED = "\033[31m"
+GREEN = "\033[32m"
+YELLOW = "\033[33m"
+RESET = "\033[0m"
 
 class Star(Enum):
     SILVER = "silver"
@@ -77,35 +81,35 @@ def test(fun: Callable[[Mode, str], None], file_name: str, *expected_results: li
         test_results[test_name]["passes"] = current_pass_count
 
     if not failed and tested == passed:
-        print(Fore.GREEN + f"All tests ({tested}) passed!" + Fore.RESET)
+        print(GREEN + f"All tests ({tested}) passed!" + RESET)
     else:
-        print(Fore.RED + f"{failed} test(s) failed" + Fore.RESET)
-        print(Fore.GREEN + f"{passed} test(s) passed" + Fore.RESET)
+        print(RED + f"{failed} test(s) failed" + RESET)
+        print(GREEN + f"{passed} test(s) passed" + RESET)
 
         for name, tests in test_results.items():
             if tests["passes"] == 0:
-                print(Fore.RED, end="")
+                print(RED, end="")
             elif tests["passes"] == 1 and tests["tests"] == 2:
-                print(Fore.YELLOW, end="")
+                print(YELLOW, end="")
             elif tests["passes"] == 1 and tests["tests"] == 1:
-                print(Fore.GREEN, end="")
+                print(GREEN, end="")
             elif tests["passes"] == 2:
-                print(Fore.GREEN, end="")
+                print(GREEN, end="")
 
-            print(f"\n{name}:" + Fore.RESET)
+            print(f"\n{name}:" + RESET)
             for star, results in tests.items():
                 if star in ["passes", "tests"]:
                     continue
                 (passed, text) = results
                 if star == Star.SILVER:
-                    print(Fore.LIGHTWHITE_EX + "\tSilver: " + Fore.RESET, end="")
+                    print(RESET + "\tSilver: " + RESET, end="")
                 else:
-                    print(Fore.LIGHTYELLOW_EX + "\tGold:   " + Fore.RESET, end="")
+                    print(YELLOW + "\tGold:   " + RESET, end="")
 
                 if passed:
-                    mark = Fore.GREEN + '\N{check mark}' + Fore.RESET
-                    color = Fore.GREEN
+                    mark = GREEN + '\N{check mark}' + RESET
+                    color = GREEN
                 else:
                     mark = "\N{cross mark}"
-                    color = Fore.LIGHTRED_EX
-                print(f"{mark} " + color + text + Fore.RESET)
+                    color = RED
+                print(f"{mark} " + color + text + RESET)
