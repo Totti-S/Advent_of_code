@@ -1,5 +1,6 @@
 import sys
 sys.path.append('..')
+import utilities.directions as DIRS
 from utilities.get_data import get_data
 from utilities.alias_type import Mode, Coordinate
 from utilities.test_framework import test
@@ -9,31 +10,27 @@ def main(mode: Mode ='silver', data_type: str = ''):
     data = get_data(__file__, data_type, line_is_numbers=False)
     silver, gold = 0, 0
     max_coord = len(data)
-    guard = ['^', '>', 'v', '<']
-    dirs = dict(zip(guard, [Coordinate.UP, Coordinate.RIGHT, Coordinate.DOWN, Coordinate.LEFT]))
-    rotate = dict(zip(dirs.values(), [Coordinate.RIGHT, Coordinate.DOWN, Coordinate.LEFT, Coordinate.UP]))
 
     # Find the starting spot
     for start_y, line in enumerate(data):
-        if any(pos :=[g in line for g in guard]):
-            symbol = guard[pos.index(True)]
-            start_x = line.index(symbol)
-            starting_dir = dirs[symbol]
+        if (start_x := line.find('^') ) != -1:
             break
+
     # Make a proper grid
     data = [[char for char in line] for line in data]
 
     starting_pos = Coordinate(start_x, start_y)
+    starting_dir = DIRS.UP
     positions = set([starting_pos])
-    dir_and_pos = set([(starting_pos, starting_dir)])
-    
+    dir_and_pos = set([(starting_pos, DIRS.UP)])
+
     def move_guard(pos: Coordinate, direc: Coordinate) -> Iterator[tuple[Coordinate, Coordinate]]:
         while True:
             next_p = pos + direc
             if next_p.y in [-1, max_coord] or next_p.x in [-1, max_coord]:
                 break
             elif data[next_p.y][next_p.x] == '#':
-                direc = rotate[direc]
+                direc = direc.rotate90(clockwise=True)
             else:
                 pos = next_p
             yield pos, direc

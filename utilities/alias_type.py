@@ -1,5 +1,5 @@
 import typing as t
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 Mode = t.Literal["silver", "gold", "both"]
 
@@ -7,18 +7,6 @@ Mode = t.Literal["silver", "gold", "both"]
 class Coordinate:
     x: int = 0
     y: int = 0
-    N: t.ClassVar[tuple[int, int]] = (0, -1)
-    S: t.ClassVar[tuple[int, int]] = (0, 1)
-    E: t.ClassVar[tuple[int, int]] = (1, 0)
-    W: t.ClassVar[tuple[int, int]] = (-1, 0)
-    NE: t.ClassVar[tuple[int, int]] = (1, 1)
-    NW: t.ClassVar[tuple[int, int]] = (-1, 1)
-    SE: t.ClassVar[tuple[int, int]] = (1, -1)
-    SW: t.ClassVar[tuple[int, int]] = (-1, -1)
-    UP: t.ClassVar[tuple[int, int]] = N
-    DOWN: t.ClassVar[tuple[int, int]] = S
-    RIGHT: t.ClassVar[tuple[int, int]] = E
-    LEFT: t.ClassVar[tuple[int, int]] = W
 
     def __sub__(self, other):
         if isinstance(other, (tuple, Coordinate)):
@@ -97,9 +85,11 @@ class Coordinate:
         norm_y = c[1] // abs(c[1]) if c[1] else 0
         return Coordinate(norm_x, norm_y)
     
-    @property
-    def rotate(self):
-        
+    def rotate90(self, clockwise: bool = False):
+        """False for counter-clockwise, True for clockwise"""
+        return Coordinate(-self.y, self.x) if clockwise else Coordinate(-self.y, -self.x)
+
+from . import directions as DIRS  
 
 class GRID:
     def __init__(
@@ -140,25 +130,17 @@ class GRID:
     def move_to_edge(self, dir: Coordinate | tuple[int, int]):
         cardinal_direction = Coordinate.get_cardinal_direction(dir)
         match (cardinal_direction):
-            case Coordinate.N:
+            case DIRS.NORTH:
                 self.current_point[1] = self.y - 1
-            case Coordinate.S:
+            case DIRS.SOUTH:
                 self.current_point[1] = 0
-            case Coordinate.E:
+            case DIRS.EAST:
                 self.current_point[0] = self.x - 1
-            case Coordinate.W:
+            case DIRS.WEST:
                 self.current_point[0] = 0
             case None:
                 pass
 
 
 if __name__ == "__main__":
-    # grid = GRID(10, 10, (0, 0), loopover=True)
-    
-
-    def fun(l):
-        l.append(5)
-
-    o = []
-    fun(o)
-    print(o)
+    grid = GRID(10, 10, (0, 0), loopover=True)
