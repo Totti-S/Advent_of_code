@@ -22,33 +22,31 @@ def main(mode: Mode ='silver', data_type: str = ''):
             if (x := line.find(antanna)) != -1:
                 coords.append(Coordinate(x, y))
         
+        if len(coords) < 2:
+            continue
+
+        harmonics.update(coords)
         for i, coord in enumerate(coords[:-1]):
-            for j, coord2 in enumerate(coords[i+1:]):
-                harmonics.add(coord)
-                harmonics.add(coord2)
+            for coord2 in coords[i+1:]:
+                j = -1
                 vec = coord - coord2
-                first = coord + vec
-                if 0 <= first.x < max_x and 0 <= first.y < max_y:
-                    nodes.add(first)
-                second = coord2 - vec
-                if 0 <= second.x < max_x and 0 <= second.y < max_y:
-                    nodes.add(second)
-
-                while True:
-                    first = first + vec
-                    if found_first := (0 <= first.x < max_x and 0 <= first.y < max_y):
-                        harmonics.add(first)
-
-                    second = second - vec
-                    if found_second := (0 <= second.x < max_x and 0 <= second.y < max_y):
-                        harmonics.add(second)
-
-                    if not found_first and not found_second:
+                node_coords = [coord, coord2]
+                while (j := j + 1) + 1:
+                    found = False
+                    for k in range(2):
+                        node_coords[k] += vec if not k else vec * -1
+                        node = node_coords[k]
+                        if 0 <= node.x < max_x and 0 <= node.y < max_y:
+                            found = True
+                            if not j:
+                                nodes.add(node)
+                            else:
+                                harmonics.add(node)
+                    if not found:
                         break
-                
 
     silver = len(nodes)
-    gold = len(nodes.union(harmonics))
+    gold = len(nodes | harmonics)
 
     print(f'{silver = }')
     print(f'{gold = }')
