@@ -5,7 +5,7 @@ from enum import Enum
 import os
 import io
 import re
-# import typing as t
+import functools
 from collections import defaultdict
 from collections.abc import Callable
 from contextlib import redirect_stdout
@@ -20,12 +20,20 @@ class Star(Enum):
     SILVER = "silver"
     GOLD = "gold"
 
-def test(fun: Callable[[Mode, str], None], file_name: str, *expected_results: list[tuple[int | None, int | None]]):
-    if len(expected_results) == 0:
-        print("No expected_results was given: No test")
-        return
 
+Testcase = tuple[int | None, int | None]
+AoCFunc = Callable[[Mode, str], None]
+
+def test(
+    func: AoCFunc,
+    file_name: str,
+    expected_results: Testcase,
+) -> None:
     year, day = re.findall(r"\d+", file_name)
+
+    if len(expected_results) == 0:
+        print(YELLOW + "WARNING: Any 'expected_results' was not given. No test ran!" + RESET)
+        return
 
     dir = f"/home/totti/Advent_of_code/{year}/data"
     base_file = f"day{day}_test"
@@ -43,7 +51,6 @@ def test(fun: Callable[[Mode, str], None], file_name: str, *expected_results: li
             result_idx = 0
         else:
             result_idx = int(re.findall(r'\d+', test_name)[0]) - 1
-
         expected_value, expected_gold = expected_results[result_idx]
         if expected_value is None and expected_gold is not None:
             mode_type = "gold"
@@ -55,7 +62,7 @@ def test(fun: Callable[[Mode, str], None], file_name: str, *expected_results: li
             assert False, "Both expected results can't be 'None'!"
         writer = io.StringIO()
         with redirect_stdout(writer):
-            fun(mode=mode_type, data_type=test_name)
+            func(mode=mode_type, data_type=test_name)
         output = writer.getvalue()
 
         test_results[test_name]["tests"] = 2 if mode_type == "both" else 1
@@ -113,3 +120,33 @@ def test(fun: Callable[[Mode, str], None], file_name: str, *expected_results: li
                     mark = "\N{cross mark}"
                     color = RED
                 print(f"{mark} " + color + text + RESET)
+
+def testable(
+    file_name: str,
+    *expected_results: Testcase,
+    before: bool = False,
+    after: bool = True,
+):
+    def empty_fun(func):
+        @functools.wraps(func)
+        def empty_wrapper(*args, **kwargs):
+            func(*args, **kwargs)
+        return empty_wrapper
+
+    if not before and not after:
+        print(YELLOW + "WARNING: 'before' and 'after' were both disabled. No tests ran!" + RESET)
+        return empty_fun
+
+    def decorator_tester(func):
+        @functools.wraps(func)
+        def wrapper_test(*args, **kwargs):
+            if before:
+                test(func, file_name, expected_results)
+            func(*args, **kwargs)
+            if after:
+                test(func, file_name, expected_results)
+        return wrapper_test
+    return decorator_tester
+
+
+# TODO Make timeit decorator

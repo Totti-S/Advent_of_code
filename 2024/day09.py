@@ -2,8 +2,9 @@ import sys
 sys.path.append('..')
 from utilities.get_data import get_data
 from utilities.alias_type import Mode
-from utilities.test_framework import test
+from utilities.test_framework import test, testable
 
+@testable(__file__, (1928, 2858))
 def main(mode: Mode ='silver', data_type: str = ''):
     data = get_data(__file__, data_type, line_is_numbers=False)
     silver, gold = 0, 0
@@ -103,4 +104,3 @@ def main(mode: Mode ='silver', data_type: str = ''):
 
 if __name__ == "__main__":
     main("both", "")
-    test(main, __file__, (1928, 2858))
