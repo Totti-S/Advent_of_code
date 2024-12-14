@@ -1,6 +1,6 @@
 import typing as t
 from dataclasses import dataclass
-from . import directions as DIRS
+
 
 Mode = t.Literal["silver", "gold", "both"]
 
@@ -90,6 +90,7 @@ class Coordinate:
         """False for counter-clockwise, True for clockwise"""
         return Coordinate(-self.y, self.x) if clockwise else Coordinate(-self.y, -self.x)
 
+from . import directions as DIRS
 class GRID:
     def __init__(
         self,
