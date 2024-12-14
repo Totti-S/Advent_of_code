@@ -1,5 +1,6 @@
 import typing as t
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from . import directions as DIRS
 
 Mode = t.Literal["silver", "gold", "both"]
 
@@ -84,12 +85,10 @@ class Coordinate:
         norm_x = c[0] // abs(c[0]) if c[0] else 0
         norm_y = c[1] // abs(c[1]) if c[1] else 0
         return Coordinate(norm_x, norm_y)
-    
+
     def rotate90(self, clockwise: bool = False):
         """False for counter-clockwise, True for clockwise"""
         return Coordinate(-self.y, self.x) if clockwise else Coordinate(-self.y, -self.x)
-
-from . import directions as DIRS  
 
 class GRID:
     def __init__(
@@ -117,13 +116,14 @@ class GRID:
         for i, max_coord in enumerate([self.x, self.y]):
             if self.current_point[i] >= max_coord:
                 if self.loopover:
-                    self.current_point[i] %= (max_coord - 1)
+                    self.current_point[i] %= max_coord
                 else:
                     self.current_point[i] = max_coord - 1
             elif self.current_point[i] < 0:
                 if self.loopover:
-                    self.current_point[i] %= -(max_coord - 1)
-                    self.current_point[i] += max_coord
+                    self.current_point[i] %= -max_coord
+                    if self.current_point[i] != 0:
+                        self.current_point[i] += max_coord
                 else:
                     self.current_point[i] = 0
 
