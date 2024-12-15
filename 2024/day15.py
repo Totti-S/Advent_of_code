@@ -29,7 +29,7 @@ def main(mode: Mode ='both', data_type: str = ''):
     }
 
     def print_current_arrangement(grid, robot = None, movement= None):
-        sleep(0.35)
+        # sleep(0.35)
         print(robot, movement)
         print()
         for y, row in enumerate(grid):
@@ -40,8 +40,6 @@ def main(mode: Mode ='both', data_type: str = ''):
                     print("@", end="")
             print()
         print()
-
-    # print_current_arrangement()
 
     grid[start_y][start_x] = "."
     for command in commands:
@@ -71,9 +69,6 @@ def main(mode: Mode ='both', data_type: str = ''):
                 box_next = next_pos + (direction * j)
                 grid[box_next.y][box_next.x] = "O"
         current_postition = next_pos
-        # print_current_arrangement()
-    
-    # print_current_arrangement()
 
     for y, row in enumerate(grid):
         for x, char in enumerate(row):
@@ -91,8 +86,6 @@ def main(mode: Mode ='both', data_type: str = ''):
         "@" : "..",
     }
 
-    print(tmp_grid)
-    print_current_arrangement(tmp_grid)
     for y, row in enumerate(tmp_grid):
         for x, char in enumerate(row):
             for new_char in replacement[char]:
@@ -103,14 +96,13 @@ def main(mode: Mode ='both', data_type: str = ''):
 
     current_postition = Coordinate(start_x, start_y)
     grid[start_y][start_x] = '.'
-    print_current_arrangement(grid, current_postition)
 
     for command in commands:
+        print_current_arrangement(grid, current_postition)
         direction = movement[command]
         next_pos = current_postition + direction
         symbol = grid[next_pos.y][next_pos.x]
         if symbol == "#":
-            print_current_arrangement(grid, current_postition, command)
             continue
         elif symbol in ["[", "]"]:
             box_moving_allowed = False
@@ -128,7 +120,6 @@ def main(mode: Mode ='both', data_type: str = ''):
                     box = box_next
                     i += 1
                 if not box_moving_allowed:
-                    print_current_arrangement(grid, current_postition, command)
                     continue
                 grid[next_pos.y][next_pos.x] = "."
                 box_next = next_pos + direction
@@ -166,8 +157,6 @@ def main(mode: Mode ='both', data_type: str = ''):
                         continue
                     break   # If wall was found we end up here
                 else:
-                    box_moving_allowed = True
-                    print_current_arrangement(grid, current_postition, command)
                     # Moving boxes is allowed
                     y_diff = 1 if direction == Dirs.DOWN else -1
                     ys = sorted(list(memory), reverse=direction == Dirs.DOWN)
@@ -179,11 +168,8 @@ def main(mode: Mode ='both', data_type: str = ''):
                             grid[y+y_diff][x] = "["
                             grid[y+y_diff][x+1] = "]"
                     current_postition = next_pos
-                print_current_arrangement(grid, current_postition, command)
                 continue
         current_postition = next_pos
-        print_current_arrangement(grid, current_postition, command)
-
 
     for y, row in enumerate(grid):
         for x, char in enumerate(row):
