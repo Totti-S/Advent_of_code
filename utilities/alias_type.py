@@ -52,6 +52,14 @@ class Coordinate:
             return self.x == other[0] and self.y == other[1]
         return False
 
+    def __lt__(self, other) -> bool:
+        if self[0] < other[0]:
+            return True
+        elif self[0] == other[0]:
+            if self[1] < other[1]:
+                return True
+        return False
+
     def __iter__(self):
         yield self.x
         yield self.y
@@ -88,7 +96,7 @@ class Coordinate:
 
     def rotate90(self, clockwise: bool = False):
         """False for counter-clockwise, True for clockwise"""
-        return Coordinate(-self.y, self.x) if clockwise else Coordinate(-self.y, -self.x)
+        return Coordinate(-self.y, self.x) if clockwise else Coordinate(self.y, -self.x)
 
 from . import directions as DIRS
 class GRID:
