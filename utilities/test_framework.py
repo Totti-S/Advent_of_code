@@ -6,6 +6,7 @@ import os
 import io
 import re
 import functools
+from time import perf_counter
 from collections import defaultdict
 from collections.abc import Callable
 from contextlib import redirect_stdout
@@ -149,4 +150,12 @@ def testable(
     return decorator_tester
 
 
-# TODO Make timeit decorator
+def time_it(func: AoCFunc):
+    @functools.wraps(func)
+    def timer(*args, **kwargs):
+        s = perf_counter()
+        func(*args, **kwargs)
+        e = perf_counter() 
+        print(f"Aika :{e-s:10.2f}")
+    return timer
+    
