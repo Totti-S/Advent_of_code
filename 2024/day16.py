@@ -1,4 +1,3 @@
-from collections import defaultdict
 import sys
 sys.path.append('..')
 from utilities.get_data import get_data
