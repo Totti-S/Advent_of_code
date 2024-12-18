@@ -5,7 +5,7 @@ from utilities.get_data import get_data
 from utilities.alias_type import Mode, Coordinate
 from utilities.test_framework import testable
 from utilities.helper_funs import nums
-from utilities.directions import UP, DOWN, LEFT, RIGHT
+import utilities.directions as dirs
 
 @testable(__file__, (36, 81), (3, None))
 def main(mode: Mode ='both', data_type: str = ''):
@@ -27,15 +27,12 @@ def main(mode: Mode ='both', data_type: str = ''):
     current_stack: dict[Coordinate, int] = defaultdict(int)
     next_stack: dict[Coordinate, int] = defaultdict(int)
 
-    def check_coordinates(node: Coordinate) -> list[Coordinate]:
-        return [node + UP, node + DOWN, node + LEFT, node + RIGHT]
-
     for start in start_point_coords:
         current_stack = defaultdict(int)
         current_stack[start] += 1
         for next_val in range(1, 10):
             for node, weight in current_stack.items():
-                for coord in check_coordinates(node):
+                for coord in dirs.adj4(node):
                     if coord.x in [-1, max_x] or coord.y in [-1, max_y]:
                         continue
                     if data[coord.y][coord.x] == next_val:

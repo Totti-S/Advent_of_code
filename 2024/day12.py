@@ -3,7 +3,7 @@ sys.path.append('..')
 from utilities.get_data import get_data
 from utilities.alias_type import Mode, Coordinate
 from utilities.test_framework import testable
-from utilities.directions import UP, DOWN, LEFT, RIGHT
+import utilities.directions as dirs
 
 from collections import defaultdict
 
@@ -12,9 +12,6 @@ def main(mode: Mode ='both', data_type: str = ''):
     data = get_data(__file__, data_type, line_is_numbers=False)
     silver, gold = 0, 0
     max_x, max_y = len(data[0]), len(data)
-
-    def check_coordinates(node: Coordinate) -> list[Coordinate]:
-        return [node + UP, node + DOWN, node + LEFT, node + RIGHT]
 
     letters: dict[str, list[list[Coordinate]]] = defaultdict(list)
 
@@ -26,7 +23,7 @@ def main(mode: Mode ='both', data_type: str = ''):
             else:
                 regions = letters[char]
                 connects_to = set()
-                for coord in check_coordinates(node):
+                for coord in dirs.adj4(node):
                     if coord.x in [-1, max_x] or coord.y in [-1, max_y]:
                         continue
                     for k, region in enumerate(regions):
@@ -52,7 +49,7 @@ def main(mode: Mode ='both', data_type: str = ''):
             # if not, that's a perimeter fence
             perimeter = 0
             for node in node_set:
-                for coord in check_coordinates(node):
+                for coord in dirs.adj4(node):
                     if coord not in node_set:
                         perimeter += 1
             area = len(node_set)
@@ -66,7 +63,7 @@ def main(mode: Mode ='both', data_type: str = ''):
 
     # Update.... Well f***. I spend one eternity to figure out away to slice the regions
     # and trying to figure out to count the edges with finding min and max from the slice
-    # Obviously that will fall to the empty spots inside the region. Then I tried to figure
+    # Obviously that will fail to the empty spots inside the region. Then I tried to figure
     # how to make the solution work still with little to no avail.
 
     def other_solution(region: list[Coordinate]):
@@ -90,7 +87,7 @@ def main(mode: Mode ='both', data_type: str = ''):
             for x in line:
                 if x - previous != 1:
                     walls = [False, False]
-                for i, direction in enumerate([UP, DOWN]):
+                for i, direction in enumerate([dirs.UP, dirs.DOWN]):
                     if Coordinate(x,y) + direction not in region:
                         if not walls[i]:
                             walls[i] = True
@@ -106,7 +103,7 @@ def main(mode: Mode ='both', data_type: str = ''):
             for y in line:
                 if y - previous != 1:
                     walls = [False, False]
-                for i, direction in enumerate([LEFT, RIGHT]):
+                for i, direction in enumerate([dirs.LEFT, dirs.RIGHT]):
                     if Coordinate(x,y) + direction not in region:
                         if not walls[i]:
                             walls[i] = True
