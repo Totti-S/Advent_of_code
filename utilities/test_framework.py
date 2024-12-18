@@ -72,6 +72,7 @@ def test(
             if expected_value is None:
                 continue
             tested += 1
+            # TODO Allow to use other input types. This checks only for ints
             value = re.search(fr'{star.value}\s?=\s?(\d+)', output)
             if value is not None:
                 value = int(value.groups()[0])
@@ -155,7 +156,6 @@ def time_it(func: AoCFunc):
     def timer(*args, **kwargs):
         s = perf_counter()
         func(*args, **kwargs)
-        e = perf_counter() 
+        e = perf_counter()
         print(f"Aika :{e-s:10.2f}")
     return timer
-    
