@@ -1,4 +1,5 @@
-from .alias_type import Coordinate 
+from typing import Iterator
+from .alias_type import Coordinate
 
 NORTH = Coordinate(0, -1)
 SOUTH = Coordinate(0, 1)
@@ -12,3 +13,19 @@ UP = Coordinate(0, -1)
 DOWN = Coordinate(0, 1)
 RIGHT = Coordinate(1, 0)
 LEFT = Coordinate(-1, 0)
+
+cardinals: list[Coordinate] = [NORTH, SOUTH, EAST, WEST]
+ordinals: list[Coordinate] = [NW, NE, SW, NE]
+compass8: list[Coordinate] = [*cardinals, *ordinals]
+
+def adj8(node: Coordinate) -> Iterator[Coordinate]:
+    for direction in compass8:
+        yield node + direction
+
+def adj4(node: Coordinate) -> Iterator[Coordinate]:
+    for direction in cardinals:
+        yield node + direction
+
+def adj4ord(node: Coordinate) -> Iterator[Coordinate]:
+    for direction in cardinals:
+        yield node + direction
