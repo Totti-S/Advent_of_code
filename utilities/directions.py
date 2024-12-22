@@ -22,9 +22,12 @@ def adj8(node: Coordinate) -> Iterator[Coordinate]:
     for direction in compass8:
         yield node + direction
 
-def adj4(node: Coordinate) -> Iterator[Coordinate]:
+def adj4(node: Coordinate, multi: int = 1) -> Iterator[Coordinate]:
     for direction in cardinals:
-        yield node + direction
+        if multi == 1:
+            yield node + direction
+        else:
+            yield node + (direction * multi)
 
 def adj4ord(node: Coordinate) -> Iterator[Coordinate]:
     for direction in cardinals:
