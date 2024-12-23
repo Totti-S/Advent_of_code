@@ -31,20 +31,17 @@ def main(mode: Mode ='both', data_type: str = ''):
         silver += num
 
     all_sequences_prices = defaultdict(int)
-    for derivate in all_derivates:
+    for derivate, prices in zip(all_derivates, all_prices):
         sub_sequences = {}
         for i in range(1, 1996):
             sequence = tuple(derivate[i:i+4])
             if sequence not in sub_sequences:
                 sub_sequences[sequence] = prices[i+3]
-        for k,v in sub_sequences.items():
-            all_sequences_prices[k] += v
+                all_sequences_prices[sequence] += prices[i+3]
 
-    # print(all_sequences_prices)
     gold = max(all_sequences_prices.values())
 
     print(f'{silver = }')
     print(f'{gold = }')
-
 if __name__ == "__main__":
-    main("both", "test")
+    main("both", "")
