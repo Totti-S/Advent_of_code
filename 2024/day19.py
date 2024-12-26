@@ -4,7 +4,7 @@ from utilities.get_data import get_data
 from utilities.alias_type import Mode
 from utilities.test_framework import testable
 
-@testable(__file__, (6, 16), (None, 12), before=True, after=False)
+@testable(__file__, (6, 16), (None, 12), before=False, after=True)
 def main(mode: Mode ='both', data_type: str = ''):
     data = get_data(__file__, data_type, line_is_numbers=False, has_portions=True)
     silver, gold = 0, 0
@@ -13,7 +13,7 @@ def main(mode: Mode ='both', data_type: str = ''):
     patterns = set([pattern.strip() for pattern in patterns[0].split(',')])
     not_solution = set()
     gold_cache: dict[str, int] = {}
-    
+
     def recursive_function(design_left: str) -> bool:
         current_towel = ""
         i = 0
@@ -56,7 +56,6 @@ def main(mode: Mode ='both', data_type: str = ''):
         if recursive_function(design):
             silver += 1
 
-
     for design in designs:
         current_towel = ""
         i = 0
@@ -66,12 +65,20 @@ def main(mode: Mode ='both', data_type: str = ''):
                 if len(design[i+1:]) == 0:
                     gold += 1
                     continue
-                gold += gold_recursive(design[i+1:], 0)
+                elif design[i+1:] in not_solution:
+                    continue
+                elif design[i+1:] in gold_cache:
+                    gold += gold_cache[design[i+1:]]
+                hits = gold_recursive(design[i+1:], 0)
+                if hits == 0:
+                    not_solution.add(design[i+1:])
+                else:
+                    gold_cache[design[i+1:]] = hits
+                gold += hits
             i += 1
-
 
     print(f'{silver = }')
     print(f'{gold = }')
     # Too low; 524173293165589
 if __name__ == "__main__":
-    main("both", "")
+    main("both", "test")
