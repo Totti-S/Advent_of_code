@@ -24,7 +24,7 @@ def main(mode: Mode ='both', data_type: str = ''):
         "<^": ">^",
         "<>": ">>",
         "<v": ">",
-        "vA": ">^",
+        "vA": "^>",
         "v>": ">",
         "v^": "^",
         "v<": "<",
@@ -57,6 +57,8 @@ def main(mode: Mode ='both', data_type: str = ''):
             return y_str + x_str
         elif start == -1 and Δx == -1:
             return x_str + y_str
+        elif start in [1, 4, 7] and Δx > 0 and Δy > 0:
+            return y_str + x_str
         elif (Δy <= -1 and Δx <= -1 and start >= 0) or Δy > 0:
             return x_str + y_str
         else:
