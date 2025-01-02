@@ -82,24 +82,30 @@ def main(mode: Mode ='both', data_type: str = ''):
         return sequence
 
 
-    print(data)
-    for line in data:
-        position = "A"
-        total_sequence = ""
-        # print(line)
-        for char in line:
-            first_order_commands = calculate_commands(position, char) + "A"
-            position = char
-            second_order_commands = calculate_pad_orders(first_order_commands)
-            seq = calculate_pad_orders(second_order_commands)
-            total_sequence += seq
+    def move_robots(data, times: int) -> int:
+        total = 0
+        for line in data:
+            position = "A"
+            total_sequence = ""
+            for char in line:
+                seq = calculate_commands(position, char) + "A"
+                position = char
+                for i in range(times):
+                    print(i)
+                    seq = calculate_pad_orders(seq)
+                total_sequence += seq
 
-        print(f"{line} : {total_sequence}")
-        print(len(total_sequence), int(line[0:3]))
-        silver += int(line[0:3]) * len(total_sequence)
+            # print(f"{line} : {total_sequence}")
+            # print(len(total_sequence), int(line[0:3]))
+            total += int(line[0:3]) * len(total_sequence)
+        return total
+
+    # GOLD: Same same but different.
+    silver = move_robots(data, 2)
+    gold = move_robots(data, 25)
 
     print(f'{silver = }')
-    # print(f'{gold = }')
+    print(f'{gold = }')
 
 if __name__ == "__main__":
     main("both", "")
